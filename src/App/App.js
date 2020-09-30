@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Route, withRouter } from 'react-router-dom';
+import NavBar from '../NavBar/NavBar';
+import Homepage from '../Homepage/Homepage';
 import APIContext from '../APIContext';
 import dummyData from '../dummy-data';
 import './App.css';
@@ -8,6 +10,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      navbar: 'hidden',
       games: [],
       users: [],
       sessions: [],
@@ -44,8 +47,17 @@ class App extends Component {
     this.updateState();
   }
 
+  // toggle visibility of navbar
+  toggleNav = () => {
+    const css = (this.state.navbar === 'hidden') ? 'show' : 'hidden';
+    this.setState({
+      navbar: css
+    });
+  };
+
   render() {
     const value = {
+      navbar: this.state.navbar,
       games: this.state.games,
       users: this.state.users,
       sessions: this.state.sessions,
@@ -57,13 +69,19 @@ class App extends Component {
       badgesMech: this.state.badgesMech,
       badgesCat: this.state.badgesCat,
       userBadgesMech: this.state.userBadgesMech,
-      userBadgesCat: this.state.userBadgesCat
+      userBadgesCat: this.state.userBadgesCat,
+      toggleNav: this.toggleNav
     };
 
     return (
       <APIContext.Provider value={value}>
         <div className="App">
-          
+          <NavBar />
+          <Route
+            exact
+            path='/'
+            component={Homepage}
+          />
         </div>
       </APIContext.Provider>
     );
