@@ -1,6 +1,7 @@
 import React from 'react';
 
 export default React.createContext({
+    navbar: '',
     games: [],
     users: [],
     sessions: [],
@@ -12,5 +13,6 @@ export default React.createContext({
     badgesMech: [],
     badgesCat: [],
     userBadgesMech: [],
-    userBadgesCat:[]
+    userBadgesCat:[],
+    toggleNav: () => {}
 });

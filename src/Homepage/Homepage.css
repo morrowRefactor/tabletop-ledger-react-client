@@ -1,0 +1,24 @@
+.Homepage {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.Homepage_overview {
+    width: 80%;
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+    margin: 0px auto 20px auto;
+}
+
+.homepageSubTitle {
+    font-size: 18px;
+}
+
+.homepage_featuresBox {
+    border: 1px solid gray;
+    border-radius: 3px;
+    width: 90%;
+    margin: 0px auto 20px auto;
+    padding: 10px;
+}
