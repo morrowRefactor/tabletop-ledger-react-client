@@ -1,0 +1,12 @@
+.SearchedGameResult {
+    text-align: left;
+}
+
+.SearchedGameResult > button {
+    font-size: 12px;
+    text-align: left;
+    border: none;
+    background-color: white;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}

@@ -1,0 +1,14 @@
+.AddGame_form > label {
+    display: inline-block;
+    width: 100%;
+}
+
+.AddGame_searchResults,
+.AddGame_selectedGame {
+    width: 90%;
+    margin: 10px auto 10px auto;
+}
+
+.AddGame_searchResults {
+    text-align: left;
+}

@@ -4,6 +4,7 @@ import NavBar from '../NavBar/NavBar';
 import Homepage from '../Homepage/Homepage';
 import GamePageMain from '../GamePageMain/GamePageMain';
 import UserProfile from '../UserProfile/UserProfile';
+import AddGame from '../AddGame/AddGame';
 import APIContext from '../APIContext';
 import dummyData from '../dummy-data';
 import './App.css';
@@ -83,13 +84,18 @@ class App extends Component {
         <div className="App">
           <NavBar />
           <Route
+            exact
+            path='/games'
+            component={GamePageMain}
+          />
+          <Route
             path='/gamer/:uid'
             component={UserProfile}
           />
           <Route
             exact
-            path='/games'
-            component={GamePageMain}
+            path='/add-games'
+            component={AddGame}
           />
           <Route
             exact

@@ -1,0 +1,16 @@
+.AddSelectedGame {
+    padding: 20px 10px 10px 10px;
+}
+
+.addSelectedGameImage {
+    width: 70%;
+}
+
+.AddSelectedGame_confirm {
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+    background-color: rgb(189, 189, 189);
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0px 5px 0px 5px;
+}

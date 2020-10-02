@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import GameBlock from '../GameBlock/GameBlock';
 import APIContext from '../APIContext';
 import './GamePageMain.css';
@@ -20,6 +21,7 @@ class GamePageMain extends Component {
         return (
             <section className='GamePageMain'>
                 <h1>Games</h1>
+                <p>Don't see a game you're looking for? <Link to='/add-games'>Add it!</Link></p>
                 {games}
             </section>
         );
