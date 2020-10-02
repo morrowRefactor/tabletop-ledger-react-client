@@ -4,6 +4,7 @@ export default React.createContext({
     navbar: '',
     games: [],
     users: [],
+    userGames: [],
     sessions: [],
     sessionScores: [],
     sessionNotes: [],

@@ -1,0 +1,25 @@
+.UserProfile_stats > h3,
+.UserProfile_badges > h3,
+.UserProfile_games > h2 {
+    width: 80%;
+    border-bottom: 1px solid gray;
+    margin: 20px auto 0px auto;
+}
+
+.UserProfile_stats > p,
+.UserProfile_badges > p {
+    line-height: 1em;
+    margin: 10px auto 10px auto;
+}
+
+.userProfile_badgesHeader {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.UserProfile_games {
+    width: 95%;
+    border: 1px solid gray;
+    border-radius: 3px;
+    margin: 30px auto 20px auto;
+}

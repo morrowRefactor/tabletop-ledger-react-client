@@ -1,70 +1,70 @@
 const games = [
     {
         id: 1,
-        bgg_id: 1234,
+        bgg_id: 174430,
         title: 'Gloomhaven',
         bgg_rating: 8.2,
         info: 'This is a board game'
     },
     {
         id: 2,
-        bgg_id: 1234,
+        bgg_id: 285984,
         title: 'Last Bastion',
         bgg_rating: 8.1,
         info: 'This is a board game'
     },
     {
         id: 3,
-        bgg_id: 1234,
+        bgg_id: 167355,
         title: 'Nemesis',
         bgg_rating: 7.8,
         info: 'This is a board game'
     },
     {
         id: 4,
-        bgg_id: 1234,
+        bgg_id: 822,
         title: 'Carcassonne',
         bgg_rating: 7.7,
         info: 'This is a board game'
     },
     {
         id: 5,
-        bgg_id: 1234,
+        bgg_id: 248490,
         title: 'Atlantis Rising',
         bgg_rating: 7.5,
         info: 'This is a board game'
     },
     {
         id: 6,
-        bgg_id: 1234,
+        bgg_id: 176189,
         title: 'Zombicide: Black Plague',
         bgg_rating: 8.2,
         info: 'This is a board game'
     },
     {
         id: 7,
-        bgg_id: 1234,
+        bgg_id: 209010,
         title: 'Mechs vs Minions',
         bgg_rating: 8.2,
         info: 'This is a board game'
     },
     {
         id: 8,
-        bgg_id: 1234,
+        bgg_id: 162886,
         title: 'Spirit Island',
         bgg_rating: 8.2,
         info: 'This is a board game'
     },
     {
         id: 9,
-        bgg_id: 1234,
+        bgg_id: 253344,
         title: 'Cthulhu: Death May Die',
         bgg_rating: 8.0,
         info: 'This is a board game'
     },
     {
         id: 10,
-        bgg_id: 1234,
+        bgg_id: 142131,
         title: 'Dominion',
         bgg_rating: 8.1,
         info: 'This is a board game'
@@ -169,6 +169,7 @@ const session_scores = [
         uid: 2,
         score: 100,
         username: 'Jane Doe',
+        winner: true,
         game_id: 1
     },
     {
@@ -177,6 +178,7 @@ const session_scores = [
         uid: null,
         score: 85,
         username: 'Some Guy',
+        winner: false,
         game_id: 1
     },
     {
@@ -185,6 +187,7 @@ const session_scores = [
         uid: 3,
         score: 91,
         username: 'Joe Thornton',
+        winner: false,
         game_id: 1
     },
     {
@@ -193,6 +196,7 @@ const session_scores = [
         uid: 2,
         score: 77,
         username: 'Jane Doe',
+        winner: false,
         game_id: 1
     },
     {
@@ -201,6 +205,7 @@ const session_scores = [
         uid: null,
         score: 88,
         username: 'Steve Smith',
+        winner: true,
         game_id: 1
     },
     {
@@ -209,6 +214,7 @@ const session_scores = [
         uid: 1,
         score: 97,
         username: 'John Doe',
+        winner: true,
         game_id: 3
     },
     {
@@ -217,6 +223,7 @@ const session_scores = [
         uid: 5,
         score: 67,
         username: 'Patrick Marleau',
+        winner: false,
         game_id: 3
     },
     {
@@ -225,6 +232,7 @@ const session_scores = [
         uid: null,
         score: 77,
         username: 'Some Lady',
+        winner: false,
         game_id: 3
     },
     {
@@ -233,6 +241,7 @@ const session_scores = [
         uid: 1,
         score: 47,
         username: 'John Doe',
+        winner: false,
         game_id: 10
     },
     {
@@ -241,6 +250,7 @@ const session_scores = [
         uid: null,
         score: 97,
         username: 'Some Guy',
+        winner: true,
         game_id: 10
     },
     {
@@ -249,6 +259,7 @@ const session_scores = [
         uid: null,
         score: 84,
         username: 'Some Lady',
+        winner: false,
         game_id: 10
     },
 ];
