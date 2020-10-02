@@ -1,0 +1,35 @@
+.UserBoardGame {
+    width: 90%;
+    border: 1px solid gray;
+    border-radius: 3px;
+    margin: 10px auto 10px auto;
+    padding: 10px;
+}
+
+.userBoardGameImage {
+    width: 70%;
+    margin: 10px auto 0px auto;
+}
+
+.UserBoardGame > h3 {
+    margin-bottom: 5px;
+}
+
+.userBoardGameRatings {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    font-size: 14px;
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.userBoardGameRatings > p {
+    margin: 0px;
+}
+
+.userBoardGameNotesHeader {
+    border-bottom: 1px solid gray;
+    font-weight: bold;
+}

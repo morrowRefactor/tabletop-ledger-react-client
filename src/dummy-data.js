@@ -4,70 +4,80 @@ const games = [
         bgg_id: 174430,
         title: 'Gloomhaven',
         bgg_rating: 8.2,
-        info: 'This is a board game'
+        info: 'Gloomhaven  is a game of Euro-inspired tactical combat in a persistent world of shifting motives. Players will take on the role of a wandering adventurer with their own special set of skills and their own reasons for traveling to this dark corner of the world.',
+        image: 'https://cf.geekdo-images.com/original/img/lDN358RgcYvQfYYN6Oy2TXpifyM=/0x0/pic2437871.jpg'
     },
     {
         id: 2,
         bgg_id: 285984,
         title: 'Last Bastion',
         bgg_rating: 8.1,
-        info: 'This is a board game'
+        info: 'A handful of heroes have just stolen the powerful relics of the Baleful Queen. Without them, the immortal sovereign is weakened; recovering them is now her sole purpose.',
+        image: 'https://cf.geekdo-images.com/original/img/JKYwSt8a2tcBYG20Oom7Rebth_Y=/0x0/pic4882123.png'
     },
     {
         id: 3,
         bgg_id: 167355,
         title: 'Nemesis',
         bgg_rating: 7.8,
-        info: 'This is a board game'
+        info: 'Playing Nemesis will take you into the heart of sci-fi survival horror in all its terror. A soldier fires blindly down a corridor, trying to stop the alien advance. A scientist races to find a solution in his makeshift lab. A traitor steals the last escape pod in the very last moment.',
+        image: 'https://cf.geekdo-images.com/original/img/fOgLH666aTUqwnhtZjSGH4-XJ8U=/0x0/pic5073276.jpg'
     },
     {
         id: 4,
         bgg_id: 822,
         title: 'Carcassonne',
         bgg_rating: 7.7,
-        info: 'This is a board game'
+        info: 'Carcassonne is a tile-placement game in which the players draw and place a tile with a piece of southern French landscape on it. The tile might feature a city, a road, a cloister, grassland or some combination thereof, and it must be placed adjacent to tiles that have already been played, in such a way that cities are connected to cities, roads to roads, etcetera.',
+        image: 'https://cf.geekdo-images.com/original/img/o4p6f88SGE899BTNMzTvERVWZ-M=/0x0/pic2337577.jpg'
     },
     {
         id: 5,
         bgg_id: 248490,
         title: 'Atlantis Rising',
         bgg_rating: 7.5,
-        info: 'This is a board game'
+        info: 'Atlantis Rising is a co-operative worker placement game in which you must work together with up to five other players to deploy citizens across your homeland, gathering resources in order to build a cosmic gate that can save your people.',
+        image: 'https://cf.geekdo-images.com/original/img/L9MTX-jaDgKZ-0Ml8xZG4pHicWU=/0x0/pic4895878.jpg'
     },
     {
         id: 6,
         bgg_id: 176189,
         title: 'Zombicide: Black Plague',
         bgg_rating: 8.2,
-        info: 'This is a board game'
+        info: `Zombicide: Black Plague takes the zombie apocalypse into a fantastical medieval setting! The arcane powers of the Necromancers have unleashed a zombie invasion in the age of swords and sorcery, and it's up to your group of straggling survivors to not only stay alive during these dark times`,
+        image: 'https://cf.geekdo-images.com/original/img/vs4UlIiZ1p3k5yIJ_vlvd2N-474=/0x0/pic2482309.jpg'
     },
     {
         id: 7,
         bgg_id: 209010,
         title: 'Mechs vs Minions',
         bgg_rating: 8.2,
-        info: 'This is a board game'
+        info: 'Mechs vs. Minions is a cooperative tabletop campaign for 2-4 players. Set in the world of Runeterra, players take on the roles of four intrepid Yordles: Corki, Tristana, Heimerdinger, and Ziggs, who must join forces and pilot their newly-crafted mechs against an army of marauding minions.',
+        image: 'https://cf.geekdo-images.com/original/img/WhHdMb8GiMY-RhHddEByDyPkrWo=/0x0/pic3184103.jpg'
     },
     {
         id: 8,
         bgg_id: 162886,
         title: 'Spirit Island',
         bgg_rating: 8.2,
-        info: 'This is a board game'
+        info: 'In the most distant reaches of the world, magic still exists, embodied by spirits of the land, of the sky, and of every natural thing. As the great powers of Europe stretch their colonial empires further and further, they will inevitably lay claim to a place where spirits still hold power - and when they do, the land itself will fight back alongside the islanders who live there.',
+        image: 'https://cf.geekdo-images.com/original/img/RmP2yBDA0LE-ZFWrEXAkgRuYjn0=/0x0/pic3615739.png'
     },
     {
         id: 9,
         bgg_id: 253344,
         title: 'Cthulhu: Death May Die',
         bgg_rating: 8.0,
-        info: 'This is a board game'
+        info: 'In Cthulhu: Death May Die, inspired by the writings of H.P. Lovecraft, you and your fellow players represent investigators in the 1920s who instead of trying to stop the coming of Elder Gods, want to summon those otherworldly beings so that you can put a stop to them permanently.',
+        image: 'https://cf.geekdo-images.com/original/img/tVhbvCp1Vlqi6zy4uR_-Z1NIVfg=/0x0/pic4705171.jpg'
     },
     {
         id: 10,
         bgg_id: 142131,
         title: 'Dominion',
         bgg_rating: 8.1,
-        info: 'This is a board game'
+        info: 'Dominion, the popular strategy card game now comes to you in this massive combination pack jammed full of the best boxed sets, additional cards and extras.',
+        image: 'https://cf.geekdo-images.com/original/img/KJ90XVwavBtGvNdptuETteLeNbI=/0x0/pic874537.jpg'
     }
 ];
 

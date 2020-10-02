@@ -18,8 +18,5 @@
 }
 
 .UserProfile_games {
-    width: 95%;
-    border: 1px solid gray;
-    border-radius: 3px;
     margin: 30px auto 20px auto;
 }

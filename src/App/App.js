@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route, withRouter } from 'react-router-dom';
 import NavBar from '../NavBar/NavBar';
 import Homepage from '../Homepage/Homepage';
+import GamePageMain from '../GamePageMain/GamePageMain';
 import UserProfile from '../UserProfile/UserProfile';
 import APIContext from '../APIContext';
 import dummyData from '../dummy-data';
@@ -84,6 +85,11 @@ class App extends Component {
           <Route
             path='/gamer/:uid'
             component={UserProfile}
+          />
+          <Route
+            exact
+            path='/games'
+            component={GamePageMain}
           />
           <Route
             exact

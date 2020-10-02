@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import GameBlock from '../GameBlock/GameBlock';
+import UserGameBlock from '../UserGameBlock/UserGameBlock';
 import APIContext from '../APIContext';
 import './UserProfile.css';
 
@@ -47,7 +47,7 @@ class UserProfile extends Component {
                 )
             );
             userMechBadges = mechBadgeMatches.map(badge => 
-                <p className='userProfile_bagdesMech'>{badge.name}</p>
+                <p className='userProfile_bagdesText' key={badge.id}>{badge.name}</p>
             );
             
             getCatBadges.forEach(badge =>
@@ -56,13 +56,14 @@ class UserProfile extends Component {
               )
             );
             userCatBadges = catBadgeMatches.map(badge =>
-                <p className='userProfile_badgesCat'>{badge.name}</p>
+                <p className='userProfile_badgesText' key={badge.id}>{badge.name}</p>
             );
 
             // get list of games associated to this user and populate an array with the relevant game objects
             const getUserGames = this.context.userGames.filter(function(game) {
                 return game.uid === user.id;
             });
+            
             getUserGames.forEach(game =>
                 userGameMatches.push(
                     this.context.games.find(({id}) => id === game.game_id)
@@ -70,11 +71,14 @@ class UserProfile extends Component {
             );
             
             usersGames = userGameMatches.map(game =>
-                <GameBlock
+                <UserGameBlock
                     key={game.id}
+                    uid={parseInt(this.props.match.params.uid)}
+                    gameID={game.id}
                     title={game.title}
                     info={game.info}
                     bggRating={game.bgg_rating}
+                    gameImage={game.image}
                 />
             )
         }
