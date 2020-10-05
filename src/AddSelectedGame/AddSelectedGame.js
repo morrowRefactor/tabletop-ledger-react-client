@@ -21,7 +21,7 @@ class AddSelectedGame extends Component {
                 <p>{this.truncate(this.props.info)}</p>
                 <section className='AddSelectedGame_confirm'>
                     <p>Is this the game you're looking to add?</p>
-                    <button>Yep! Add it!</button>
+                    <button onClick={e => this.props.addGame()}>Yep! Add it!</button>
                     <p>No? Try a different game from the results below or try a new search term.</p>
                 </section>
             </section>

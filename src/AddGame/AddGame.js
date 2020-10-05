@@ -67,19 +67,28 @@ class AddGame extends Component {
                     title = gameArr[i].attributes.value;
                 }
             }
+
+            const newGame = {
+                id: this.context.games.length + 1,
+                bgg_id: id,
+                title: title,
+                info: info.value,
+                image: image.value,
+                yearPub: year.attributes.value,
+                bgg_rating: bggRating.attributes.value
+            };
             
             this.setState({
-                selectedGame: {
-                    id: id,
-                    title: title,
-                    info: info.value,
-                    image: image.value,
-                    yearPub: year.attributes.value,
-                    rating: bggRating.attributes.value
-                }
+                selectedGame: newGame
             });
         })
         .catch(err => console.log(err));
+    };
+
+    addSelectedGame = () => {
+        this.context.addNewGame(this.state.selectedGame);
+        const linkText = this.state.selectedGame.title.replace(/\s+/g, '-').toLowerCase();
+        this.props.history.push(`/game/${this.state.selectedGame.id}/${linkText}`)
     }
 
     handleSubmit = e => {
@@ -132,6 +141,7 @@ class AddGame extends Component {
                 image={this.state.selectedGame.image}
                 yearPub={this.state.selectedGame.yearPub}
                 rating={this.state.selectedGame.rating}
+                addGame={this.addSelectedGame}
             />
         }
     }

@@ -11,6 +11,7 @@ class GamePageMain extends Component {
         const games = this.context.games.map(game =>
             <GameBlock
                 key={game.id}
+                id={game.id}
                 title={game.title}
                 info={game.info}
                 image={game.image}

@@ -3,6 +3,7 @@ import { Route, withRouter } from 'react-router-dom';
 import NavBar from '../NavBar/NavBar';
 import Homepage from '../Homepage/Homepage';
 import GamePageMain from '../GamePageMain/GamePageMain';
+import GamePage from '../GamePage/GamePage';
 import UserProfile from '../UserProfile/UserProfile';
 import AddGame from '../AddGame/AddGame';
 import APIContext from '../APIContext';
@@ -48,7 +49,7 @@ class App extends Component {
     })
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.updateState();
   }
 
@@ -59,6 +60,15 @@ class App extends Component {
       navbar: css
     });
   };
+
+  addNewGame = game => {
+    const newGamesArr = this.state.games;
+    newGamesArr.push(game);
+
+    this.setState({
+      games: newGamesArr
+    });
+  }
 
   render() {
     const value = {
@@ -76,7 +86,9 @@ class App extends Component {
       badgesCat: this.state.badgesCat,
       userBadgesMech: this.state.userBadgesMech,
       userBadgesCat: this.state.userBadgesCat,
-      toggleNav: this.toggleNav
+      toggleNav: this.toggleNav,
+      addNewGame: this.addNewGame,
+      refreshState: this.updateState
     };
 
     return (
@@ -87,6 +99,10 @@ class App extends Component {
             exact
             path='/games'
             component={GamePageMain}
+          />
+          <Route
+            path='/game/:game_id'
+            component={GamePage}
           />
           <Route
             path='/gamer/:uid'

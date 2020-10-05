@@ -15,5 +15,7 @@ export default React.createContext({
     badgesCat: [],
     userBadgesMech: [],
     userBadgesCat:[],
-    toggleNav: () => {}
+    toggleNav: () => {},
+    addNewGame: () => {},
+    refreshState: () => {}
 });
