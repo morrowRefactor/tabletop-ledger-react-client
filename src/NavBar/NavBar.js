@@ -14,6 +14,7 @@ class Navbar extends Component {
                 <div className='break'></div>
                 <ul className={this.context.navbar}>
                     <li><Link className='topNavLink' to='/games'>Games</Link></li>
+                    <li><Link className='topNavLink' to='/leaderboards'>Leaderboards</Link></li>
                     <li><Link className='topNavLink' to='/gamer/1'>My Profile</Link></li>
                 </ul>
             </nav>

@@ -4,6 +4,7 @@ import NavBar from '../NavBar/NavBar';
 import Homepage from '../Homepage/Homepage';
 import GamePageMain from '../GamePageMain/GamePageMain';
 import GamePage from '../GamePage/GamePage';
+import Leaderboard from '../Leaderboard/Leaderboard';
 import UserProfile from '../UserProfile/UserProfile';
 import AddGame from '../AddGame/AddGame';
 import APIContext from '../APIContext';
@@ -27,7 +28,8 @@ class App extends Component {
       badgesMech: [],
       badgesCat: [],
       userBadgesMech: [],
-      userBadgesCat:[]
+      userBadgesCat:[],
+      userStandings: []
     };
   };
 
@@ -45,7 +47,8 @@ class App extends Component {
       badgesMech: dummyData.badges_mech,
       badgesCat: dummyData.badges_cat,
       userBadgesMech: dummyData.user_badges_mech,
-      userBadgesCat: dummyData.user_badges_cat
+      userBadgesCat: dummyData.user_badges_cat,
+      userStandings: dummyData.user_standings
     })
   }
 
@@ -86,6 +89,7 @@ class App extends Component {
       badgesCat: this.state.badgesCat,
       userBadgesMech: this.state.userBadgesMech,
       userBadgesCat: this.state.userBadgesCat,
+      userStandings: this.state.userStandings,
       toggleNav: this.toggleNav,
       addNewGame: this.addNewGame,
       refreshState: this.updateState
@@ -95,6 +99,11 @@ class App extends Component {
       <APIContext.Provider value={value}>
         <div className="App">
           <NavBar />
+          <Route
+            exact
+            path='/leaderboards'
+            component={Leaderboard}
+          />
           <Route
             exact
             path='/games'
