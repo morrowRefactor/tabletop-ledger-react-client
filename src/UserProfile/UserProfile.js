@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import UserGameBlock from '../UserGameBlock/UserGameBlock';
 import APIContext from '../APIContext';
 import './UserProfile.css';
@@ -16,6 +17,7 @@ class UserProfile extends Component {
         let userCatBadges;
         let userGameMatches = [];
         let usersGames;
+        const sessionLink = '/add-session/' + parseInt(this.props.match.params.uid);
         
         if(this.context.users.length > 1) {
             const thisUser = this.context.users.find(({id}) => id === parseInt(this.props.match.params.uid));
@@ -86,6 +88,7 @@ class UserProfile extends Component {
         return (
             <section className='UserProfile'>
                 <h1 className='userProfileName'>{user.name}</h1>
+                <Link className='userProfileSessionLink' to={sessionLink}>Add a game session</Link>
                 <section className='UserProfile_stats'>
                     <h3>Stats</h3>
                     <p>Total games sessions: {totalPlayCount}</p>

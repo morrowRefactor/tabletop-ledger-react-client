@@ -1,0 +1,8 @@
+.SessionForm_sessionPlayer > label {
+    display: inline-block;
+    width: 100%;
+}
+
+.SessionForm_sessionPlayer > input {
+    margin-bottom: 10px;
+}

@@ -7,6 +7,7 @@ import GamePage from '../GamePage/GamePage';
 import Leaderboard from '../Leaderboard/Leaderboard';
 import UserProfile from '../UserProfile/UserProfile';
 import AddGame from '../AddGame/AddGame';
+import SessionForm from '../SessionForm/SessionForm';
 import APIContext from '../APIContext';
 import dummyData from '../dummy-data';
 import './App.css';
@@ -65,13 +66,42 @@ class App extends Component {
   };
 
   addNewGame = game => {
-    const newGamesArr = this.state.games;
+    let newGamesArr = this.state.games;
     newGamesArr.push(game);
 
     this.setState({
       games: newGamesArr
     });
-  }
+  };
+
+  addSession = session => {
+    let newSessArr = this.state.sessions;
+    newSessArr.push(session);
+
+    this.setState({
+      sessions: newSessArr
+    });
+  };
+
+  addSessionNotes = note => {
+    let newNote = this.state.sessionNotes;
+    newNote.push(note);
+
+    this.setState({
+      sessionNotes: newNote
+    });
+  };
+
+  addSessionScores = scores => {
+    let newScores = this.state.sessionScores;
+    for(let i = 0; i < scores.length; i++) {
+      newScores.push(scores[i]);
+    }
+    
+    this.setState({
+      sessionScores: newScores
+    });
+  };
 
   render() {
     const value = {
@@ -92,6 +122,9 @@ class App extends Component {
       userStandings: this.state.userStandings,
       toggleNav: this.toggleNav,
       addNewGame: this.addNewGame,
+      addSession: this.addSession,
+      addSessionNotes: this.addSessionNotes,
+      addSessionScores: this.addSessionScores,
       refreshState: this.updateState
     };
 
@@ -121,6 +154,10 @@ class App extends Component {
             exact
             path='/add-games'
             component={AddGame}
+          />
+          <Route
+            path='/add-session/:uid'
+            component={SessionForm}
           />
           <Route
             exact

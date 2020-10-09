@@ -18,5 +18,8 @@ export default React.createContext({
     userStandings: [],
     toggleNav: () => {},
     addNewGame: () => {},
+    addSession: () => {},
+    addSessionNotes: () => {},
+    addSessionScores: () => {},
     refreshState: () => {}
 });
