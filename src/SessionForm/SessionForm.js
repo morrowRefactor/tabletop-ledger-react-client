@@ -118,6 +118,7 @@ class SessionForm extends Component {
         }
 
         this.context.addSessionScores(newSessionScores);
+        this.props.history.push(`/gamer/${this.props.match.params.uid}`);
     }
     
 
