@@ -16,10 +16,11 @@ export default React.createContext({
     userBadgesMech: [],
     userBadgesCat:[],
     userStandings: [],
+    gameSessions: [],
+    userGameSessions: [],
     toggleNav: () => {},
-    addNewGame: () => {},
-    addSession: () => {},
-    addSessionNotes: () => {},
-    addSessionScores: () => {},
+    getBadgeData: () => {},
+    getSessionData: () => {},
+    getUserData: () => {},
     refreshState: () => {}
 });

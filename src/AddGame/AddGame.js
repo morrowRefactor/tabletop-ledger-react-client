@@ -5,6 +5,7 @@ import SearchedGameResult from '../SearchedGameResult/SearchedGameResult';
 import AddSelectedGame from '../AddSelectedGame/AddSelectedGame';
 import ValidationError from '../ValidationError/ValidationError';
 import APIContext from '../APIContext';
+import config from '../config';
 import './AddGame.css';
 
 class AddGame extends Component {
@@ -15,7 +16,8 @@ class AddGame extends Component {
         this.state = {
             searchedGame: [],
             searchTitle: { value: '', touched: false },
-            selectedGame: {}
+            selectedGame: {},
+            duplicateGame: { value: { id: 0, title: '' }, status: false }
         };
     };
 
@@ -56,7 +58,7 @@ class AddGame extends Component {
             const xml = new XMLParser().parseFromString(data);
             const gameArr = xml.children[0].children;
             const image = gameArr.find(({name}) => name === 'image');
-            const info = gameArr.find(({name}) => name === 'description');
+            const desc = gameArr.find(({name}) => name === 'description');
             const stats = gameArr.find(({name}) => name === 'statistics');
             const year = gameArr.find(({name}) => name === 'yearpublished');
             const gameStats = stats.children[0].children;
@@ -72,7 +74,7 @@ class AddGame extends Component {
                 id: this.context.games.length + 1,
                 bgg_id: id,
                 title: title,
-                info: info.value,
+                description: desc.value,
                 image: image.value,
                 yearPub: year.attributes.value,
                 bgg_rating: bggRating.attributes.value
@@ -86,9 +88,41 @@ class AddGame extends Component {
     };
 
     addSelectedGame = () => {
-        this.context.addNewGame(this.state.selectedGame);
-        const linkText = this.state.selectedGame.title.replace(/\s+/g, '-').toLowerCase();
-        this.props.history.push(`/game/${this.state.selectedGame.id}/${linkText}`)
+        fetch(`${config.API_ENDPOINT}/api/games`, {
+            method: 'POST',
+            body: JSON.stringify(this.state.selectedGame),
+            headers: {
+              'content-type': 'application/json'
+            }
+        })
+        .then(res => {
+            if (!res.ok) {
+                return res.json().then(error => {
+                    throw error
+            })
+            }
+            return res.json()
+        })
+        .then(newGame => {
+            const linkText = newGame.title.replace(/\s+/g, '-').toLowerCase();
+            this.props.history.push(`/game/${newGame.id}/${linkText}`)
+        })
+        .catch(error => {
+            this.setState({ error })
+        })
+    }
+
+    checkDupeGame = () => {
+        const checkGame = this.context.games.find(({ bgg_id }) => bgg_id === parseInt(this.state.selectedGame.bgg_id));
+        if(checkGame) {
+            this.setState({
+                duplicateGame: { value: { id: checkGame.id, title: checkGame.title }, status: true }
+            });
+            this.dupeGame();
+        }
+        else {
+            this.addSelectedGame();
+        }
     }
 
     handleSubmit = e => {
@@ -108,6 +142,17 @@ class AddGame extends Component {
         const title = this.state.searchTitle.value.trim();
         if (title.length === 0) {
           return 'A game title is required';
+        };
+    };
+
+    dupeGame = () => {
+        if(this.state.duplicateGame.status === true) {
+            const linkText = this.state.duplicateGame.value.title.replace(/\s+/g, '-').toLowerCase();
+            const gameLink = `http://localhost:3000/game/${this.state.duplicateGame.value.id}/${linkText}`;
+        
+            return (
+                <span>Looks like this game already exists on TTL.  <a href={gameLink}>Check it out</a></span>
+            );
         };
     };
 
@@ -137,17 +182,18 @@ class AddGame extends Component {
             return <AddSelectedGame
                 key={this.state.selectedGame.id}
                 title={this.state.selectedGame.title}
-                info={this.state.selectedGame.info}
+                desc={this.state.selectedGame.description}
                 image={this.state.selectedGame.image}
                 yearPub={this.state.selectedGame.yearPub}
-                rating={this.state.selectedGame.rating}
-                addGame={this.addSelectedGame}
+                rating={this.state.selectedGame.bgg_rating}
+                addGame={this.checkDupeGame}
             />
         }
     }
 
     render() {
         const titleError = this.validateTitle();
+        const dupeError = this.dupeGame();
 
         return (
             <section className='AddGame'>
@@ -169,6 +215,9 @@ class AddGame extends Component {
                     />
                     {this.state.searchTitle.touched && (
                         <ValidationError message={titleError} />
+                    )}
+                    {this.state.duplicateGame.status && (
+                        <ValidationError message={dupeError} />
                     )}
                     <button type='submit'>
                         Search

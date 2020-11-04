@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import APIContext from '../APIContext';
 import './UserGameBlock.css';
 
@@ -6,6 +7,8 @@ class UserGameBlock extends Component {
     static contextType = APIContext;
 
     render() {
+        const linkText = this.props.title.replace(/\s+/g, '-').toLowerCase();
+        const gameLink = `/game/${this.props.gameID}/${linkText}`;
         const gameID = this.props.gameID;
         const uid = this.props.uid;
 
@@ -15,11 +18,12 @@ class UserGameBlock extends Component {
 
         return (
             <section className='UserBoardGame'>
-                <img className='userBoardGameImage' src={this.props.gameImage} alt={this.props.title} />
-                <h3>{this.props.title}</h3>
+                <Link to={gameLink}><img className='userBoardGameImage' src={this.props.gameImage} alt={this.props.title} /></Link>
+                <Link to={gameLink}><h3>{this.props.title}</h3></Link>
                 <div className='userBoardGameRatings'>
                     <p>Your rating: {userGameSpecs[0].rating}</p>
                     <p>BGG rating: {this.props.bggRating}</p>
+                    <p>Your sessions: {this.props.playCount}</p>
                 </div>
                 <p>{this.props.info}</p>
                 <p className='userBoardGameNotesHeader'>Your notes:</p>

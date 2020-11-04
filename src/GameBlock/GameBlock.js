@@ -10,6 +10,12 @@ class GameBlock extends Component {
         return (str.length > 200) ? str.substr(0, 199) + '... ' : str;
     };
 
+    renderPlays = () => {
+        if(this.props.playCount) {
+            return <p>Play Count: {this.props.playCount}</p>;
+        };
+    };
+
     render() {
         const linkText = this.props.title.replace(/\s+/g, '-').toLowerCase();
         const link = `/game/${this.props.id}/${linkText}`;
@@ -18,8 +24,9 @@ class GameBlock extends Component {
             <section className='GameBlock'>
                 <img className='gameBlockImage' src={this.props.image} alt={this.props.title} />
                 <h3><Link to={link}>{this.props.title}</Link></h3>
+                {this.renderPlays()}
                 <p className='gameBlockRating'>BGG Rating: {this.props.bggRating}</p>
-                <p>{this.truncate(this.props.info)}</p>
+                <p>{this.truncate(this.props.description)}</p>
             </section>
         );
     }

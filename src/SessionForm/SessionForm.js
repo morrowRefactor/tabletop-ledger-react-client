@@ -4,6 +4,7 @@ import Select from 'react-select';
 import SessionPlayer from '../SessionPlayer/SessionPlayer';
 import ValidationError from '../ValidationError/ValidationError';
 import APIContext from '../APIContext';
+import config from '../config';
 import './SessionForm.css';
 
 class SessionForm extends Component {
@@ -73,13 +74,29 @@ class SessionForm extends Component {
 
     handleSubmit = () => {
         const newSession = {
-            id: (this.context.sessions.length + 1),
             game_id: this.state.gameID,
             uid: this.state.hostID,
             date: this.state.date.value
         };
-        
-        this.context.addSession(newSession);
+
+        fetch(`${config.API_ENDPOINT}/api/sessions`, {
+            method: 'POST',
+            body: JSON.stringify(newSession),
+            headers: {
+              'content-type': 'application/json'
+            }
+        })
+        .then(res => {
+            if (!res.ok) {
+                return res.json().then(error => {
+                    throw error
+                })
+            }
+            return res.json()
+        })
+        .catch(error => {
+            this.setState({ error })
+        })
        
         if(this.state.notes.touched === true && this.state.notes.value.length > 0) {
             this.handleSessionNotes(newSession);
@@ -91,13 +108,30 @@ class SessionForm extends Component {
     
     handleSessionNotes = newSession => {
         const newNote = {
-            id: (this.context.sessionNotes.length + 1),
             uid: this.state.hostID,
             session_id: newSession.id,
             note: this.state.notes.value
         };
 
-        this.context.addSessionNotes(newNote);
+        fetch(`${config.API_ENDPOINT}/api/session-notes`, {
+            method: 'POST',
+            body: JSON.stringify(newNote),
+            headers: {
+              'content-type': 'application/json'
+            }
+        })
+        .then(res => {
+            if (!res.ok) {
+                return res.json().then(error => {
+                    throw error
+                })
+            }
+            return res.json()
+        })
+        .catch(error => {
+            this.setState({ error })
+        })
+
         this.handleSessionPlayers(newSession);
     };
 
@@ -117,7 +151,25 @@ class SessionForm extends Component {
             newSessionScores.push(newPlayer);
         }
 
-        this.context.addSessionScores(newSessionScores);
+        fetch(`${config.API_ENDPOINT}/api/session-scores`, {
+            method: 'POST',
+            body: JSON.stringify(newSessionScores),
+            headers: {
+              'content-type': 'application/json'
+            }
+        })
+        .then(res => {
+            if (!res.ok) {
+                return res.json().then(error => {
+                    throw error
+                })
+            }
+            return res.json()
+        })
+        .catch(error => {
+            this.setState({ error })
+        })
+
         this.props.history.push(`/gamer/${this.props.match.params.uid}`);
     }
     

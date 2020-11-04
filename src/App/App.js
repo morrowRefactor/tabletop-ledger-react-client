@@ -9,7 +9,7 @@ import UserProfile from '../UserProfile/UserProfile';
 import AddGame from '../AddGame/AddGame';
 import SessionForm from '../SessionForm/SessionForm';
 import APIContext from '../APIContext';
-import dummyData from '../dummy-data';
+import config from '../config';
 import './App.css';
 
 class App extends Component {
@@ -30,27 +30,130 @@ class App extends Component {
       badgesCat: [],
       userBadgesMech: [],
       userBadgesCat:[],
-      userStandings: []
+      userStandings: [],
+      gameSessions: [],
+      userGameSessions: []
     };
   };
 
   updateState = () => {
-    this.setState({
-      games: dummyData.games,
-      users: dummyData.users,
-      userGames: dummyData.user_games,
-      sessions: dummyData.sessions,
-      sessionScores: dummyData.session_scores,
-      sessionNotes: dummyData.session_notes,
-      userReccos: dummyData.user_reccos,
-      usersNotes: dummyData.user_notes,
-      gameTips: dummyData.game_tips,
-      badgesMech: dummyData.badges_mech,
-      badgesCat: dummyData.badges_cat,
-      userBadgesMech: dummyData.user_badges_mech,
-      userBadgesCat: dummyData.user_badges_cat,
-      userStandings: dummyData.user_standings
+    Promise.all([
+      fetch(`${config.API_ENDPOINT}/api/games`),
+      fetch(`${config.API_ENDPOINT}/api/users`),
+      fetch(`${config.API_ENDPOINT}/api/user-standings`),
+      fetch(`${config.API_ENDPOINT}/api/sessions/game-sessions/0`)
+    ])
+    .then(([gameRes, userRes, userStandRes, gameSessRes]) => {
+      if (!gameRes.ok)
+        return gameRes.json().then(e => Promise.reject(e));
+      if (!userRes.ok)
+        return userRes.json().then(e => Promise.reject(e));
+      if (!userStandRes.ok)
+        return userStandRes.json().then(e => Promise.reject(e));
+      if (!gameSessRes.ok)
+        return gameSessRes.json().then(e => Promise.reject(e));
+      return Promise.all([gameRes.json(), userRes.json(), userStandRes.json(), gameSessRes.json()]);
     })
+    .then(([games, users, userStands, gameSessions]) => {
+      this.setState({
+        games: games,
+        users: users,
+        userStandings: userStands,
+        gameSessions: gameSessions
+      })
+    })
+    .catch(error => {
+      console.error({error});
+    });
+  }
+
+  getBadgeData = () => {
+    Promise.all([
+      fetch(`${config.API_ENDPOINT}/api/badges-mech`),
+      fetch(`${config.API_ENDPOINT}/api/badges-cat`),
+      fetch(`${config.API_ENDPOINT}/api/user-badges-mech`),
+      fetch(`${config.API_ENDPOINT}/api/user-badges-cat`)
+    ])
+    .then(([badgesMechRes, badgesCatRes, userMechRes, userCatRes]) => {
+      if (!badgesMechRes.ok)
+        return badgesMechRes.json().then(e => Promise.reject(e));
+      if (!badgesCatRes.ok)
+        return badgesCatRes.json().then(e => Promise.reject(e));
+      if (!userMechRes.ok)
+        return userMechRes.json().then(e => Promise.reject(e));
+      if (!userCatRes.ok)
+        return userCatRes.json().then(e => Promise.reject(e));
+      return Promise.all([badgesMechRes.json(), badgesCatRes.json(), userMechRes.json(), userCatRes.json()]);
+    })
+    .then(([badgesMech, badgesCat, userBadgesMech, userBadgesCat]) => {
+      this.setState({
+        badgesMech: badgesMech,
+        badgesCat: badgesCat,
+        userBadgesMech: userBadgesMech,
+        userBadgesCat: userBadgesCat
+      })
+    })
+    .catch(error => {
+      console.error({error});
+    });
+  }
+
+  getSessionData = () => {
+    Promise.all([
+      fetch(`${config.API_ENDPOINT}/api/sessions`),
+      fetch(`${config.API_ENDPOINT}/api/session-scores`),
+      fetch(`${config.API_ENDPOINT}/api/session-notes`)
+    ])
+    .then(([sessionsRes, sessScoresRes, sessNotesRes]) => {
+      if (!sessionsRes.ok)
+        return sessionsRes.json().then(e => Promise.reject(e));
+      if (!sessScoresRes.ok)
+        return sessScoresRes.json().then(e => Promise.reject(e));
+      if (!sessNotesRes.ok)
+        return sessNotesRes.json().then(e => Promise.reject(e));
+      return Promise.all([sessionsRes.json(), sessScoresRes.json(), sessNotesRes.json()]);
+    })
+    .then(([sessions, sessScores, sessNotes]) => {
+      this.setState({
+        sessions: sessions,
+        sessionScores: sessScores,
+        sessionNotes: sessNotes
+      })
+    })
+    .catch(error => {
+      console.error({error});
+    });
+  }
+
+  getUserData = uid => {
+    Promise.all([
+      fetch(`${config.API_ENDPOINT}/api/user-games`),
+      fetch(`${config.API_ENDPOINT}/api/user-reccos`),
+      fetch(`${config.API_ENDPOINT}/api/game-tips`),
+      fetch(`${config.API_ENDPOINT}/api/sessions/user-sessions/${uid}`)
+    ])
+    .then(([userGamesRes, userReccosRes, gameTipsRes, userSessRes]) => {
+      if (!userGamesRes.ok)
+        return userGamesRes.json().then(e => Promise.reject(e));
+      if (!userReccosRes.ok)
+        return userReccosRes.json().then(e => Promise.reject(e));
+      if (!gameTipsRes.ok)
+        return gameTipsRes.json().then(e => Promise.reject(e));
+      if (!userSessRes.ok)
+        return userSessRes.json().then(e => Promise.reject(e));
+      return Promise.all([userGamesRes.json(), userReccosRes.json(), gameTipsRes.json(), userSessRes.json()]);
+    })
+    .then(([userGames, userReccos, gameTips, userSessions]) => {
+      this.setState({
+        userGames: userGames,
+        userReccos: userReccos,
+        gameTips: gameTips,
+        userGameSessions: userSessions
+      })
+    })
+    .catch(error => {
+      console.error({error});
+    });
   }
 
   componentDidMount = () => {
@@ -62,44 +165,6 @@ class App extends Component {
     const css = (this.state.navbar === 'hidden') ? 'show' : 'hidden';
     this.setState({
       navbar: css
-    });
-  };
-
-  addNewGame = game => {
-    let newGamesArr = this.state.games;
-    newGamesArr.push(game);
-
-    this.setState({
-      games: newGamesArr
-    });
-  };
-
-  addSession = session => {
-    let newSessArr = this.state.sessions;
-    newSessArr.push(session);
-
-    this.setState({
-      sessions: newSessArr
-    });
-  };
-
-  addSessionNotes = note => {
-    let newNote = this.state.sessionNotes;
-    newNote.push(note);
-
-    this.setState({
-      sessionNotes: newNote
-    });
-  };
-
-  addSessionScores = scores => {
-    let newScores = this.state.sessionScores;
-    for(let i = 0; i < scores.length; i++) {
-      newScores.push(scores[i]);
-    }
-    
-    this.setState({
-      sessionScores: newScores
     });
   };
 
@@ -120,11 +185,12 @@ class App extends Component {
       userBadgesMech: this.state.userBadgesMech,
       userBadgesCat: this.state.userBadgesCat,
       userStandings: this.state.userStandings,
+      gameSessions: this.state.gameSessions,
+      userGameSessions: this.state.userGameSessions,
       toggleNav: this.toggleNav,
-      addNewGame: this.addNewGame,
-      addSession: this.addSession,
-      addSessionNotes: this.addSessionNotes,
-      addSessionScores: this.addSessionScores,
+      getBadgeData: this.getBadgeData,
+      getSessionData: this.getSessionData,
+      getUserData: this.getUserData,
       refreshState: this.updateState
     };
 

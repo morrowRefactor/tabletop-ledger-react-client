@@ -9,30 +9,33 @@ class UserProfile extends Component {
 
     render() {
         let user = { name: '' };
-        let totalPlayCount = 0;
-        let winCount = 0;
+        let userSessions = {};
         let mechBadgeMatches = [];
         let catBadgeMatches = [];
         let userMechBadges;
         let userCatBadges;
         let userGameMatches = [];
         let usersGames;
+        let userGamePlays;
         const sessionLink = '/add-session/' + parseInt(this.props.match.params.uid);
         
-        if(this.context.users.length > 1) {
+        if(this.context.users.length < 1) {
+            this.context.refreshState();
+            this.context.getBadgeData();
+            this.context.getSessionData();
+            this.context.getUserData(parseInt(this.props.match.params.uid));
+        }
+
+        if(this.context.userBadgesMech.length < 1 || this.context.sessions.length < 1) {
+            this.context.getBadgeData();
+            this.context.getSessionData();
+            this.context.getUserData(parseInt(this.props.match.params.uid));
+        }
+
+        else {
             const thisUser = this.context.users.find(({id}) => id === parseInt(this.props.match.params.uid));
             user = thisUser;
-
-            // get the number of play sessions and the win ratio for this user
-            for(let i = 0; i < this.context.sessionScores.length; i++) {
-                if (this.context.sessionScores[i].uid === user.id) {
-                    totalPlayCount++;
-
-                    if(this.context.sessionScores[i].winner === true) {
-                        winCount++;
-                    }
-                }
-            }
+            userSessions = this.context.userStandings.find(({uid}) => uid === user.id);
 
             // get an array of all the badges this user has for mechanics and categories
             const getMechBadges = this.context.userBadgesMech.filter(function(badge) {
@@ -71,6 +74,18 @@ class UserProfile extends Component {
                     this.context.games.find(({id}) => id === game.game_id)
                 )
             );
+
+            // get session counts for each user game
+            userGameMatches.forEach(game => {
+                let playCount = 0;
+                for(let i = 0; i < this.context.userGameSessions.length; i++) {
+                    if(this.context.userGameSessions[i].game_id === game.id) {
+                        playCount++;
+                    }
+                }
+                
+                game.playCount = playCount;
+            })
             
             usersGames = userGameMatches.map(game =>
                 <UserGameBlock
@@ -81,6 +96,7 @@ class UserProfile extends Component {
                     info={game.info}
                     bggRating={game.bgg_rating}
                     gameImage={game.image}
+                    playCount={game.playCount}
                 />
             )
         }
@@ -91,9 +107,9 @@ class UserProfile extends Component {
                 <Link className='userProfileSessionLink' to={sessionLink}>Add a game session</Link>
                 <section className='UserProfile_stats'>
                     <h3>Stats</h3>
-                    <p>Total games sessions: {totalPlayCount}</p>
-                    <p>Total wins: {winCount}</p>
-                    <p>Win ratio: {(winCount / totalPlayCount) * 100}%</p>
+                    <p>Total games sessions: {userSessions.sessions}</p>
+                    <p>Total wins: {userSessions.wins}</p>
+                    <p>Win ratio: {(userSessions.wins / userSessions.sessions) * 100}%</p>
                 </section>
                 <section className='UserProfile_badges'>
                     <h3>Your Badges</h3>
