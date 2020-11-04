@@ -126,11 +126,15 @@ class App extends Component {
   }
 
   getUserData = uid => {
+    let user = uid;
+    if(!uid) {
+      user = 1
+    }
     Promise.all([
       fetch(`${config.API_ENDPOINT}/api/user-games`),
       fetch(`${config.API_ENDPOINT}/api/user-reccos`),
       fetch(`${config.API_ENDPOINT}/api/game-tips`),
-      fetch(`${config.API_ENDPOINT}/api/sessions/user-sessions/${uid}`)
+      fetch(`${config.API_ENDPOINT}/api/sessions/user-sessions/${user}`)
     ])
     .then(([userGamesRes, userReccosRes, gameTipsRes, userSessRes]) => {
       if (!userGamesRes.ok)

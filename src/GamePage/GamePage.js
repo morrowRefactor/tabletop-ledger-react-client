@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import APIContext from '../APIContext';
+import GameTip from '../GameTip/GameTip';
+import UserReccoBlock from '../UserReccoBlock/UserReccoBlock';
 import './GamePage.css';
 
 class GamePage extends Component {
@@ -7,6 +9,62 @@ class GamePage extends Component {
 
     getGames = () => {
         this.context.refreshState();
+        this.context.getUserData();
+    }
+
+    renderGameTips = () => {
+        let gameTips = [];
+        for(let i = 0; i < this.context.gameTips.length; i++) {
+            if(this.context.gameTips[i].game_id === parseInt(this.props.match.params.game_id)) {
+                let newArr = gameTips;
+                newArr.push(this.context.gameTips[i]);
+                gameTips = newArr;
+            }
+        }
+
+        if(gameTips.length > 0) {
+            return (
+                gameTips.map(tip => 
+                    <GameTip
+                        key={tip.id}
+                        uid={tip.uid}
+                        tip={tip.tip}
+                    />
+                )
+            );
+        }
+
+        else {
+            return 'No user tips for this game';
+        }
+    }
+
+    renderGameReccos = () => {
+        let gameReccos = [];
+        for(let i = 0; i < this.context.userReccos.length; i++) {
+            if(this.context.userReccos[i].game_id === parseInt(this.props.match.params.game_id)) {
+                let newArr = gameReccos;
+                newArr.push(this.context.userReccos[i]);
+                gameReccos = newArr;
+            }
+        }
+
+        if(gameReccos.length > 0) {
+            return (
+                gameReccos.map(recco => 
+                    <UserReccoBlock
+                        key={recco.id}
+                        uid={recco.uid}
+                        recco={recco.recco_game_id}
+                        note={recco.note}
+                    />
+                )
+            );
+        }
+
+        else {
+            return 'No user recommendations for this game';
+        }
     }
 
     render() {
@@ -14,7 +72,7 @@ class GamePage extends Component {
         let thisGame = { title: '' };
         let gamePlays = 0;
         
-        if(this.context.games.length < 1 || !gameCheck) {
+        if(this.context.games.length < 1 || this.context.gameTips.length < 1) {
             this.getGames();
         }
         else {
@@ -35,7 +93,9 @@ class GamePage extends Component {
                 <p>BGG Rating: {thisGame.bgg_rating}</p>
                 <p>{thisGame.description}</p>
                 <h2>Player Tips</h2>
+                {this.renderGameTips()}
                 <h2>Player Recommendations</h2>
+                {this.renderGameReccos()}
             </section>
         );
     }
