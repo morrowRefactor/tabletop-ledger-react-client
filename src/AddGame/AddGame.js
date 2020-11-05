@@ -104,8 +104,14 @@ class AddGame extends Component {
             return res.json()
         })
         .then(newGame => {
-            const linkText = newGame.title.replace(/\s+/g, '-').toLowerCase();
-            this.props.history.push(`/game/${newGame.id}/${linkText}`)
+            if(this.props.match.params.uid) {
+                const linkText = newGame.title.replace(/\s+/g, '-').toLowerCase();
+                this.props.history.push(`/add-session/${this.props.match.params.uid}/new-game`)
+            }
+            else {
+                const linkText = newGame.title.replace(/\s+/g, '-').toLowerCase();
+                this.props.history.push(`/game/${newGame.id}/${linkText}`)
+            }
         })
         .catch(error => {
             this.setState({ error })

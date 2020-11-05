@@ -221,8 +221,7 @@ class App extends Component {
             component={UserProfile}
           />
           <Route
-            exact
-            path='/add-games'
+            path={['/add-games/:uid', '/add-games']}
             component={AddGame}
           />
           <Route

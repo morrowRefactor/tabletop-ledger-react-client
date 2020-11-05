@@ -92,18 +92,20 @@ class SessionForm extends Component {
                     throw error
                 })
             }
+            
             return res.json()
+        })
+        .then(data => {
+            if(this.state.notes.touched === true && this.state.notes.value.length > 0) {
+                this.handleSessionNotes(data);
+            }
+            else {
+                this.handleSessionPlayers(data);
+            }
         })
         .catch(error => {
             this.setState({ error })
         })
-       
-        if(this.state.notes.touched === true && this.state.notes.value.length > 0) {
-            this.handleSessionNotes(newSession);
-        }
-        else {
-            this.handleSessionPlayers(newSession);
-        }
     };
     
     handleSessionNotes = newSession => {
@@ -137,18 +139,37 @@ class SessionForm extends Component {
 
     handleSessionPlayers = newSession => {
         // populate players array with each entry submitted
-        let newSessionScores = this.state.scores;
-        for(let i = 0; i < this.state.playerCount.length; i++) {
-            const id = this.state.playerCount[i];
-            const playerName = document.getElementById(`playerID[${id}]`);
-            const playerScore = document.getElementById(`scoreID[${id}]`);
-            const newPlayer = {
-                session_id: newSession.id,
-                game_id: this.state.gameID,
-                username: playerName.value,
-                score: parseInt(playerScore.value)
-            };
-            newSessionScores.push(newPlayer);
+        let newSessionScores = [];
+
+        const hostScore = {
+            uid: parseInt(this.props.match.params.uid),
+            session_id: newSession.id,
+            game_id: this.state.gameID,
+            name: document.getElementById('hostName').value,
+            score: parseInt(document.getElementById('hostScore').value),
+            winner: document.getElementById('hostWin').checked
+        };
+        let newArr = newSessionScores;
+        newArr.push(hostScore);
+        newSessionScores = newArr;
+
+        if(this.state.playerCount.length > 1) {
+            for(let i = 0; i < this.state.playerCount.length; i++) {
+                const id = this.state.playerCount[i];
+                const playerName = document.getElementById(`playerID[${id}]`);
+                const playerScore = document.getElementById(`scoreID[${id}]`);
+                const playerWin = document.getElementById(`winnerID[${id}]`);
+                const newPlayer = {
+                    session_id: newSession.id,
+                    game_id: this.state.gameID,
+                    name: playerName.value,
+                    score: parseInt(playerScore.value),
+                    winner: playerWin.checked
+                };
+                let newArr = newSessionScores;
+                newArr.push(newPlayer);
+                newSessionScores = newArr;
+            }
         }
 
         fetch(`${config.API_ENDPOINT}/api/session-scores`, {
@@ -170,6 +191,41 @@ class SessionForm extends Component {
             this.setState({ error })
         })
 
+        this.handleHostStats(hostScore);
+    }
+
+    handleHostStats = hostScore => {
+        const currStats = this.context.userStandings.find(({uid}) => uid === hostScore.uid);
+        let newStats = currStats;
+
+        if(hostScore.winner === true) {
+            newStats.sessions = currStats.sessions + 1;
+            newStats.wins = currStats.wins + 1;
+        }
+        else{
+            newStats.sessions = currStats.sessions + 1;
+            newStats.losses = currStats.losses + 1;
+        }
+        
+        fetch(`${config.API_ENDPOINT}/api/user-standings/${newStats.id}`, {
+            method: 'PATCH',
+            body: JSON.stringify(newStats),
+            headers: {
+              'content-type': 'application/json'
+            }
+        })
+        .then(res => {
+            if (!res.ok) {
+                return res.json().then(error => {
+                    throw error
+                })
+            }
+            return res.json()
+        })
+        .catch(error => {
+            this.setState({ error })
+        })
+        
         this.props.history.push(`/gamer/${this.props.match.params.uid}`);
     }
     
@@ -179,30 +235,47 @@ class SessionForm extends Component {
     };
 
     render() {
-        let selectedValue;
         const titleError = this.validateTitle();
         const dateError = this.validateDate();
-
         let gameList = [];
-        if(this.context.games.length > 0) {
-            for(let i = 0; i < this.context.games.length; i++) {
-                const thisGame = this.context.games[i];
-                thisGame.value = thisGame.title;
-                thisGame.label = thisGame.title;
-                let newArr = gameList;
-                newArr.push(thisGame);
-                gameList = newArr.sort();
-            }
-        }
-
+        let user = { name: '' };
+        const addGameLink = `/add-games/${parseInt(this.props.match.params.uid)}`
         const sessionPlayers = this.state.playerCount.map(plyr => 
             <SessionPlayer
                 key={plyr}
                 id={plyr}
             />
         );
-      
+        
+        if(this.context.users.length < 1) {
+            this.context.refreshState();
+        }
 
+        //check whether a new game was just added and state needs to be refreshed
+        if(this.props.location.pathname.includes('/new-game')) {
+            this.context.refreshState();
+            this.props.history.push(`/add-session/${this.props.match.params.uid}`)
+        }
+
+        else{
+            const thisUser = this.context.users.find(({id}) => id === parseInt(this.props.match.params.uid));
+            if(thisUser) {
+                user = thisUser
+            }
+            
+            if(this.context.games.length > 0) {
+                for(let i = 0; i < this.context.games.length; i++) {
+                    const thisGame = this.context.games[i];
+                    thisGame.value = thisGame.title;
+                    thisGame.label = thisGame.title;
+                    let newArr = gameList;
+                    newArr.push(thisGame);
+                    gameList = newArr.sort();
+                }
+            }
+
+        }
+        
         return (
             <section className='SessionForm'>
                 <h1>Log a Game Session</h1>
@@ -221,7 +294,7 @@ class SessionForm extends Component {
                             value={gameList.filter(obj => obj.value === this.state.gameTitle.value)}
                             required
                         />
-                        <p className='gameTitleHelperText'>Don't see the game you're looking for? <Link to='/add-games'>Add it!</Link></p>
+                        <p className='gameTitleHelperText'>Don't see the game you're looking for? <Link to={addGameLink}>Add it!</Link></p>
                         {this.state.gameTitle.touched && (
                             <ValidationError message={titleError} />
                         )}
@@ -256,6 +329,31 @@ class SessionForm extends Component {
                         <label htmlFor='sessionPlayer'>
                             Session Players
                         </label>
+                        <label htmlFor='winner'>
+                            Winner
+                        </label>
+                        <input
+                            id='hostWin'
+                            type='checkbox'
+                        />
+                        <label htmlFor='sessionPlayerName'>
+                            You
+                        </label>
+                        <input
+                            type='text'
+                            id='hostName'
+                            defaultValue={user.name}
+                            required
+                        />
+                        <label htmlFor='sessionPlayerScore'>
+                            Score
+                        </label>
+                        <input
+                            type='text'
+                            id='hostScore'
+                            placeholder='100'
+                            required
+                        />
                         {sessionPlayers}
                         <button className='sessionFrom_addPlayer' type='button' onClick={e => this.addPlayer()}>Add another player</button>
                     </section>
