@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Select from 'react-select';
 import SessionPlayerForm from '../SessionPlayerForm/SessionPlayerForm';
+import AddSessionPlayerForm from '../AddSessionPlayerForm/AddSessionPlayerForm';
 import ValidationError from '../ValidationError/ValidationError';
 import APIContext from '../APIContext';
 import config from '../config';
@@ -19,6 +20,7 @@ class SessionForm extends Component {
             date: { value: '', touched: false },
             notes: { value: '', touched: false },
             playerCount: [ 1 ],
+            playerCountWL: [ 1 ],
             scores: []
         };
     };
@@ -66,9 +68,18 @@ class SessionForm extends Component {
     addPlayer = () => {
         let newCount = this.state.playerCount;
         newCount.push(newCount.length + 1);
-        
+
         this.setState({
-          resCount: newCount
+            playerCount: newCount
+        });
+    };
+
+    addPlayerWL = () => {
+        let newCount = this.state.playerCountWL;
+        newCount.push(newCount.length + 1);
+
+        this.setState({
+            playerCountWL: newCount
         });
     };
 
@@ -138,45 +149,86 @@ class SessionForm extends Component {
     };
 
     handleSessionPlayers = newSession => {
-        // populate players array with each entry submitted
         let newSessionScores = [];
+        let hostScore = {};
+        let winnerVal;
 
-        const hostScore = {
-            uid: parseInt(this.props.match.params.uid),
-            session_id: newSession.id,
-            game_id: this.state.gameID,
-            name: document.getElementById('hostName').value,
-            score: parseInt(document.getElementById('hostScore').value),
-            winner: document.getElementById('hostWin').checked
-        };
+        // check whether scored or win/loss session was submitted
+        const gameType = document.getElementById('winLoss').value;
+        if(gameType === 'Yes' || gameType === 'No') {
+            if (gameType === 'Yes') {
+                winnerVal = true;
+            }
+            if (gameType === 'No') {
+                winnerVal = false;
+            }
+
+            hostScore = {
+                uid: parseInt(this.props.match.params.uid),
+                session_id: newSession.id,
+                game_id: this.state.gameID,
+                name: document.getElementById('hostName').value,
+                winner: winnerVal
+            }
+        }
+        else {
+            hostScore = {
+                uid: parseInt(this.props.match.params.uid),
+                session_id: newSession.id,
+                game_id: this.state.gameID,
+                name: document.getElementById('hostName').value,
+                score: parseInt(document.getElementById('hostScore').value),
+                winner: document.getElementById('hostWin').checked
+            };
+        }
+
         let newArr = newSessionScores;
         newArr.push(hostScore);
         newSessionScores = newArr;
 
-        if(this.state.playerCount.length > 1) {
-            for(let i = 0; i < this.state.playerCount.length; i++) {
-                const id = this.state.playerCount[i];
-                const playerName = document.getElementById(`playerID[${id}]`);
-                const playerScore = document.getElementById(`scoreID[${id}]`);
-                const playerWin = document.getElementById(`winnerID[${id}]`);
-                const newPlayer = {
-                    session_id: newSession.id,
-                    game_id: this.state.gameID,
-                    name: playerName.value,
-                    score: parseInt(playerScore.value),
-                    winner: playerWin.checked
-                };
-                let newArr = newSessionScores;
-                newArr.push(newPlayer);
-                newSessionScores = newArr;
+        if(gameType === 'Yes' || gameType === 'No') {
+            if(this.state.playerCountWL.length > 0) {
+                for(let i = 0; i < this.state.playerCountWL.length; i++) {
+                    const id = this.state.playerCountWL[i];
+                    const playerName = document.getElementById(`playerIDWL[${id}]`);
+                    const newPlayer = {
+                        session_id: newSession.id,
+                        game_id: this.state.gameID,
+                        name: playerName.value,
+                        winner: winnerVal
+                    };
+                    let newArr = newSessionScores;
+                    newArr.push(newPlayer);
+                    newSessionScores = newArr;
+                }
             }
         }
-
+        else {
+            if(this.state.playerCount.length > 0) {
+                for(let i = 0; i < this.state.playerCount.length; i++) {
+                    const id = this.state.playerCount[i];
+                    const playerName = document.getElementById(`playerID[${id}]`);
+                    const playerScore = document.getElementById(`scoreID[${id}]`);
+                    const playerWin = document.getElementById(`winnerID[${id}]`);
+                    const newPlayer = {
+                        session_id: newSession.id,
+                        game_id: this.state.gameID,
+                        name: playerName.value,
+                        score: parseInt(playerScore.value),
+                        winner: playerWin.checked
+                    };
+                    let newArr = newSessionScores;
+                    newArr.push(newPlayer);
+                    newSessionScores = newArr;
+                }
+            }
+        }
+        
         fetch(`${config.API_ENDPOINT}/api/session-scores`, {
             method: 'POST',
             body: JSON.stringify(newSessionScores),
             headers: {
-              'content-type': 'application/json'
+            'content-type': 'application/json'
             }
         })
         .then(res => {
@@ -242,6 +294,13 @@ class SessionForm extends Component {
         const addGameLink = `/add-games/${parseInt(this.props.match.params.uid)}`
         const sessionPlayers = this.state.playerCount.map(plyr => 
             <SessionPlayerForm
+                key={plyr}
+                id={plyr}
+            />
+        );
+
+        const sessionPlayersWL = this.state.playerCountWL.map(plyr => 
+            <AddSessionPlayerForm
                 key={plyr}
                 id={plyr}
             />
@@ -325,6 +384,7 @@ class SessionForm extends Component {
                             onChange={e => this.updateNotes(e.target.value)}
                         />
                     </section>
+                    <h3>Scored Sessions</h3>
                     <section className='sessionForm_formField'>
                         <label htmlFor='sessionPlayer'>
                             Session Players
@@ -356,6 +416,31 @@ class SessionForm extends Component {
                         />
                         {sessionPlayers}
                         <button className='sessionFrom_addPlayer' type='button' onClick={e => this.addPlayer()}>Add another player</button>
+                    </section>
+                    <h3>Win/Loss Sessions</h3>
+                    <section className='sessionForm_winLoss'>
+                        <label htmlFor='winLoss'>
+                            Did you win?
+                        </label>
+                        <select
+                            type='select'
+                            id='winLoss'
+                        >
+                            <option>Select</option>
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
+                        <label htmlFor='sessionPlayerName'>
+                            You
+                        </label>
+                        <input
+                            type='text'
+                            id='hostNameWL'
+                            defaultValue={user.name}
+                            required
+                        />
+                        {sessionPlayersWL}
+                        <button className='sessionFrom_addPlayer' type='button' onClick={e => this.addPlayerWL()}>Add another player</button>
                     </section>
                     <div className='AddDestinationForm_buttons'>
                         <button 
