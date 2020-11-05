@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import APIContext from '../APIContext';
-import './SessionPlayer.css';
+import './SessionPlayerForm.css';
 
 class SessionPlayer extends Component {
     static contextType = APIContext;

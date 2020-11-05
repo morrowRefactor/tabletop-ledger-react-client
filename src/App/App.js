@@ -8,6 +8,7 @@ import Leaderboard from '../Leaderboard/Leaderboard';
 import UserProfile from '../UserProfile/UserProfile';
 import AddGame from '../AddGame/AddGame';
 import SessionForm from '../SessionForm/SessionForm';
+import SessionPage from '../SessionPage/SessionPage';
 import APIContext from '../APIContext';
 import config from '../config';
 import './App.css';
@@ -227,6 +228,10 @@ class App extends Component {
           <Route
             path='/add-session/:uid'
             component={SessionForm}
+          />
+          <Route
+            path='/session/:session_id'
+            component={SessionPage}
           />
           <Route
             exact

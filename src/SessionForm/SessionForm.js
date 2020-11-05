@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Select from 'react-select';
-import SessionPlayer from '../SessionPlayer/SessionPlayer';
+import SessionPlayerForm from '../SessionPlayerForm/SessionPlayerForm';
 import ValidationError from '../ValidationError/ValidationError';
 import APIContext from '../APIContext';
 import config from '../config';
@@ -241,7 +241,7 @@ class SessionForm extends Component {
         let user = { name: '' };
         const addGameLink = `/add-games/${parseInt(this.props.match.params.uid)}`
         const sessionPlayers = this.state.playerCount.map(plyr => 
-            <SessionPlayer
+            <SessionPlayerForm
                 key={plyr}
                 id={plyr}
             />
