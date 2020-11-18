@@ -115,9 +115,11 @@ class SessionForm extends Component {
         .then(data => {
             if(this.state.notes.touched === true && this.state.notes.value.length > 0) {
                 this.handleSessionNotes(data);
+                this.handleUserCatMechLogs(newSession.game_id);
             }
             else {
                 this.handleSessionPlayers(data);
+                this.handleUserCatMechLogs(newSession.game_id);
             }
         })
         .catch(error => {
@@ -286,6 +288,109 @@ class SessionForm extends Component {
         
         this.props.history.push(`/gamer/${this.props.match.params.uid}`);
     }
+
+    // update the user logs for sessions played by game category and mechanic
+    handleUserCatMechLogs = gameID => {
+        // arrays of the category and mechanic IDs for this game
+        let gameCats = [];
+        let gameMechs = [];
+
+        for(let i = 0; i < this.context.gameCatMatches; i++) {
+            if(this.context.gameCatMatches[i].game_id === gameID) {
+                let newArr = gameCats;
+                newArr.push(this.context.gameCatMatches[i].cat_id);
+                gameCats = newArr;
+            }
+        }
+
+        for(let i = 0; i < this.context.gameMechMatches; i++) {
+            if(this.context.gameMechMatches[i].game_id === gameID) {
+                let newArr = gameMechs;
+                newArr.push(this.context.gameMechMatches[i].mech_id);
+                gameMechs = newArr;
+            }
+        }
+
+        // arrays of the current session logs for this user by category and mechanic
+        let userCatLogs = [];
+        let userMechLogs = [];
+
+        for(let i = 0; i < this.context.userGameCatLogs.length; i++) {
+            if(this.context.userGameCatLogs[i].uid === this.state.hostID) {
+                let newArr = userCatLogs;
+                newArr.push(this.context.userGameCatLogs[i]);
+                userCatLogs = newArr;
+            }
+        }
+
+        for(let i = 0; i < this.context.userGameMechLogs.length; i++) {
+            if(this.context.userGameMechLogs[i].uid === this.state.hostID) {
+                let newArr = userMechLogs;
+                newArr.push(this.context.userGameMechLogs[i]);
+                userMechLogs = newArr;
+            }
+        }
+
+        // arrays for any new category/mechanic logs that need to be posted or any existing logs that need to be patched
+        let newUserCatLogs = [];
+        let newUserMechLogs = [];
+        let updateUserCatLogs = [];
+        let updateUserMechLogs = [];
+
+        gameCats.forEach(cat => {
+            const catCheck = userCatLogs.find(({ cat_id }) => cat_id === cat);
+
+            if(!catCheck) {
+                const newCatLog = {
+                    uid: this.state.hostID,
+                    cat_id: cat,
+                    sessions: 1
+                };
+
+                let newArr = newUserCatLogs;
+                newArr.push(newCatLog);
+                newUserCatLogs = newArr;
+            }
+            else {
+                const updateCatLog = {
+                    uid: catCheck.uid,
+                    cat_id: catCheck.cat_id,
+                    sessions: catCheck.sessions + 1
+                };
+
+                let newArr = updateUserCatLogs;
+                newArr.push(updateCatLog);
+                updateUserCatLogs = newArr;
+            }
+        });
+
+        gameMechs.forEach(mech => {
+            const mechCheck = userMechLogs.find(({ mech_id }) => mech_id === mech);
+
+            if(!mechCheck) {
+                const newMechLog = {
+                    uid: this.state.hostID,
+                    mech_id: mech,
+                    sessions: 1
+                };
+
+                let newArr = newUserMechLogs;
+                newArr.push(newMechLog);
+                newUserMechLogs = newArr;
+            }
+            else {
+                const updateMechLog = {
+                    uid: mechCheck.uid,
+                    mech_id: mechCheck.mech_id,
+                    sessions: mechCheck.sessions + 1
+                };
+
+                let newArr = updateUserMechLogs;
+                newArr.push(updateMechLog);
+                updateUserMechLogs = newArr;
+            }
+        });
+    }
     
 
     handleClickCancel = () => {
@@ -312,8 +417,10 @@ class SessionForm extends Component {
             />
         );
         
-        if(this.context.users.length < 1) {
+        if(this.context.users.length < 1 || this.context.userGameMechLogs.length < 1) {
             this.context.refreshState();
+            this.context.getUserData();
+            this.context.getGameData();
         }
 
         //check whether a new game was just added and state needs to be refreshed

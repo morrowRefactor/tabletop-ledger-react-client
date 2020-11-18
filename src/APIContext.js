@@ -22,6 +22,8 @@ export default React.createContext({
     gameCategories: [],
     gameMechMatches: [],
     gameCatMatches: [],
+    userGameCatLogs: [],
+    userGameMechLogs: [],
     toggleNav: () => {},
     getBadgeData: () => {},
     getSessionData: () => {},

@@ -37,7 +37,9 @@ class App extends Component {
       gameMechanics: [],
       gameCategories: [],
       gameMechMatches: [],
-      gameCatMatches: []
+      gameCatMatches: [],
+      userGameCatLogs: [],
+      userGameMechLogs: []
     };
   };
 
@@ -139,9 +141,11 @@ class App extends Component {
       fetch(`${config.API_ENDPOINT}/api/user-games`),
       fetch(`${config.API_ENDPOINT}/api/user-reccos`),
       fetch(`${config.API_ENDPOINT}/api/game-tips`),
-      fetch(`${config.API_ENDPOINT}/api/sessions/user-sessions/${user}`)
+      fetch(`${config.API_ENDPOINT}/api/sessions/user-sessions/${user}`),
+      fetch(`${config.API_ENDPOINT}/api/user-game-cat-logs`),
+      fetch(`${config.API_ENDPOINT}/api/user-game-mech-logs`)
     ])
-    .then(([userGamesRes, userReccosRes, gameTipsRes, userSessRes]) => {
+    .then(([userGamesRes, userReccosRes, gameTipsRes, userSessRes, userCatLogsRes, userMechLogsRes]) => {
       if (!userGamesRes.ok)
         return userGamesRes.json().then(e => Promise.reject(e));
       if (!userReccosRes.ok)
@@ -150,14 +154,20 @@ class App extends Component {
         return gameTipsRes.json().then(e => Promise.reject(e));
       if (!userSessRes.ok)
         return userSessRes.json().then(e => Promise.reject(e));
-      return Promise.all([userGamesRes.json(), userReccosRes.json(), gameTipsRes.json(), userSessRes.json()]);
+      if (!userCatLogsRes.ok)
+        return userCatLogsRes.json().then(e => Promise.reject(e));
+      if (!userMechLogsRes.ok)
+        return userMechLogsRes.json().then(e => Promise.reject(e));
+      return Promise.all([userGamesRes.json(), userReccosRes.json(), gameTipsRes.json(), userSessRes.json(), userCatLogsRes.json(), userMechLogsRes.json()]);
     })
-    .then(([userGames, userReccos, gameTips, userSessions]) => {
+    .then(([userGames, userReccos, gameTips, userSessions, userCatLogs, userMechLogs]) => {
       this.setState({
         userGames: userGames,
         userReccos: userReccos,
         gameTips: gameTips,
-        userGameSessions: userSessions
+        userGameSessions: userSessions,
+        userGameCatLogs: userCatLogs,
+        userGameMechLogs: userMechLogs
       })
     })
     .catch(error => {
@@ -232,6 +242,8 @@ class App extends Component {
       gameCategories: this.state.gameCategories,
       gameMechMatches: this.state.gameMechMatches,
       gameCatMatches: this.state.gameMechMatches,
+      userGameCatLogs: this.state.userGameCatLogs,
+      userGameMechLogs: this.state.userGameMechLogs,
       toggleNav: this.toggleNav,
       getBadgeData: this.getBadgeData,
       getSessionData: this.getSessionData,
