@@ -15,6 +15,7 @@ class SessionForm extends Component {
         super(props)
         this.state = {
             hostID: 0,
+            sessName: '',
             gameID: 0,
             gameTitle: { value: '', touched: false },
             date: { value: '', touched: false },
@@ -33,6 +34,10 @@ class SessionForm extends Component {
         if(this.context.games.length < 1) {
             this.context.refreshState();
         };
+    };
+
+    updateName = name => {
+        this.setState({sessName: name});
     };
     
     updateTitle = title => {
@@ -87,7 +92,8 @@ class SessionForm extends Component {
         const newSession = {
             game_id: this.state.gameID,
             uid: this.state.hostID,
-            date: this.state.date.value
+            date: this.state.date.value,
+            name: this.state.sessName
         };
 
         fetch(`${config.API_ENDPOINT}/api/sessions`, {
@@ -341,6 +347,18 @@ class SessionForm extends Component {
                 <form 
                     className='SessionForm_form'
                 >
+                    <section className='sessionForm_formField'>
+                        <label htmlFor='name'>
+                            Session Name (optional)
+                        </label>
+                        <input
+                            type='name'
+                            id='name'
+                            placeholder='Gary exacts his revenge!'
+                            onChange={e => this.updateName(e.target.value)}
+                            required
+                        />
+                    </section>
                     <section className='sessionForm_formField'>
                         <label htmlFor='gameTitle'>
                             Game title

@@ -10,6 +10,11 @@ class GamePage extends Component {
     getGames = () => {
         this.context.refreshState();
         this.context.getUserData();
+        this.context.getSessionData();
+    }
+
+    addUserGame = () => {
+
     }
 
     renderGameTips = () => {
@@ -72,7 +77,7 @@ class GamePage extends Component {
         let thisGame = { title: '' };
         let gamePlays = 0;
         
-        if(this.context.games.length < 1 || this.context.gameTips.length < 1) {
+        if(!gameCheck || this.context.games.length < 1) {
             this.getGames();
         }
         else {
@@ -80,7 +85,7 @@ class GamePage extends Component {
 
             // get total logged plays for this game
             const totalPlays = this.context.gameSessions.find(({ game_id }) => game_id === thisGame.id);
-            if(totalPlays.cnt) {
+            if(totalPlays) {
                 gamePlays = totalPlays.cnt;
             }
         }
@@ -89,6 +94,9 @@ class GamePage extends Component {
             <section className='GamePage'>
                 <h1>{thisGame.title}</h1>
                 <img className='gamePageImage' src={thisGame.image} alt={thisGame.title} />
+                <div className='gamePageUserGameAdd'>
+                    <button>Add to my games</button>
+                </div>
                 <p>Total sessions logged on TTL: {gamePlays}</p>
                 <p>BGG Rating: {thisGame.bgg_rating}</p>
                 <p>{thisGame.description}</p>

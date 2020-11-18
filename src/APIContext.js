@@ -18,9 +18,14 @@ export default React.createContext({
     userStandings: [],
     gameSessions: [],
     userGameSessions: [],
+    gameMechanics: [],
+    gameCategories: [],
+    gameMechMatches: [],
+    gameCatMatches: [],
     toggleNav: () => {},
     getBadgeData: () => {},
     getSessionData: () => {},
     getUserData: () => {},
+    getGameData: () => {},
     refreshState: () => {}
 });

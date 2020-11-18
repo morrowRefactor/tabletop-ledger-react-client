@@ -33,7 +33,11 @@ class App extends Component {
       userBadgesCat:[],
       userStandings: [],
       gameSessions: [],
-      userGameSessions: []
+      userGameSessions: [],
+      gameMechanics: [],
+      gameCategories: [],
+      gameMechMatches: [],
+      gameCatMatches: []
     };
   };
 
@@ -41,26 +45,22 @@ class App extends Component {
     Promise.all([
       fetch(`${config.API_ENDPOINT}/api/games`),
       fetch(`${config.API_ENDPOINT}/api/users`),
-      fetch(`${config.API_ENDPOINT}/api/user-standings`),
-      fetch(`${config.API_ENDPOINT}/api/sessions/game-sessions/0`)
+      fetch(`${config.API_ENDPOINT}/api/user-standings`)
     ])
-    .then(([gameRes, userRes, userStandRes, gameSessRes]) => {
+    .then(([gameRes, userRes, userStandRes]) => {
       if (!gameRes.ok)
         return gameRes.json().then(e => Promise.reject(e));
       if (!userRes.ok)
         return userRes.json().then(e => Promise.reject(e));
       if (!userStandRes.ok)
         return userStandRes.json().then(e => Promise.reject(e));
-      if (!gameSessRes.ok)
-        return gameSessRes.json().then(e => Promise.reject(e));
-      return Promise.all([gameRes.json(), userRes.json(), userStandRes.json(), gameSessRes.json()]);
+      return Promise.all([gameRes.json(), userRes.json(), userStandRes.json()]);
     })
-    .then(([games, users, userStands, gameSessions]) => {
+    .then(([games, users, userStands, gameSess]) => {
       this.setState({
         games: games,
         users: users,
-        userStandings: userStands,
-        gameSessions: gameSessions
+        userStandings: userStands
       })
     })
     .catch(error => {
@@ -99,26 +99,30 @@ class App extends Component {
     });
   }
 
-  getSessionData = () => {
+  getSessionData = id => {
     Promise.all([
       fetch(`${config.API_ENDPOINT}/api/sessions`),
       fetch(`${config.API_ENDPOINT}/api/session-scores`),
-      fetch(`${config.API_ENDPOINT}/api/session-notes`)
+      fetch(`${config.API_ENDPOINT}/api/session-notes`),
+      fetch(`${config.API_ENDPOINT}/api/sessions/game-sessions/${id}`)
     ])
-    .then(([sessionsRes, sessScoresRes, sessNotesRes]) => {
+    .then(([sessionsRes, sessScoresRes, sessNotesRes, gameSessRes]) => {
       if (!sessionsRes.ok)
         return sessionsRes.json().then(e => Promise.reject(e));
       if (!sessScoresRes.ok)
         return sessScoresRes.json().then(e => Promise.reject(e));
       if (!sessNotesRes.ok)
         return sessNotesRes.json().then(e => Promise.reject(e));
-      return Promise.all([sessionsRes.json(), sessScoresRes.json(), sessNotesRes.json()]);
+      if (!gameSessRes.ok)
+        return gameSessRes.json().then(e => Promise.reject(e));
+      return Promise.all([sessionsRes.json(), sessScoresRes.json(), sessNotesRes.json(), gameSessRes.json()]);
     })
-    .then(([sessions, sessScores, sessNotes]) => {
+    .then(([sessions, sessScores, sessNotes, gameSess]) => {
       this.setState({
         sessions: sessions,
         sessionScores: sessScores,
-        sessionNotes: sessNotes
+        sessionNotes: sessNotes,
+        gameSessions: gameSess
       })
     })
     .catch(error => {
@@ -129,7 +133,7 @@ class App extends Component {
   getUserData = uid => {
     let user = uid;
     if(!uid) {
-      user = 1
+      user = 0
     }
     Promise.all([
       fetch(`${config.API_ENDPOINT}/api/user-games`),
@@ -154,6 +158,38 @@ class App extends Component {
         userReccos: userReccos,
         gameTips: gameTips,
         userGameSessions: userSessions
+      })
+    })
+    .catch(error => {
+      console.error({error});
+    });
+  }
+
+  // fetch data pertaining to game mechanics and categories
+  getGameData = () => {
+    Promise.all([
+      fetch(`${config.API_ENDPOINT}/api/games-mech`),
+      fetch(`${config.API_ENDPOINT}/api/games-cat`),
+      fetch(`${config.API_ENDPOINT}/api/games-mech-matches`),
+      fetch(`${config.API_ENDPOINT}/api/games-cat-matches`)
+    ])
+    .then(([gamesMechRes, gamesCatRes, mechMatchesRes, catMatchesRes]) => {
+      if (!gamesMechRes.ok)
+        return gamesMechRes.json().then(e => Promise.reject(e));
+      if (!gamesCatRes.ok)
+        return gamesCatRes.json().then(e => Promise.reject(e));
+      if (!mechMatchesRes.ok)
+        return mechMatchesRes.json().then(e => Promise.reject(e));
+      if (!catMatchesRes.ok)
+        return catMatchesRes.json().then(e => Promise.reject(e));
+      return Promise.all([gamesMechRes.json(), gamesCatRes.json(), mechMatchesRes.json(), catMatchesRes.json()]);
+    })
+    .then(([gamesMech, gamesCat, mechMatches, catMatches]) => {
+      this.setState({
+        gameMechanics: gamesMech,
+        gameCategories: gamesCat,
+        gameMechMatches: mechMatches,
+        gameCatMatches: catMatches
       })
     })
     .catch(error => {
@@ -192,10 +228,15 @@ class App extends Component {
       userStandings: this.state.userStandings,
       gameSessions: this.state.gameSessions,
       userGameSessions: this.state.userGameSessions,
+      gameMechanics: this.state.gameMechanics,
+      gameCategories: this.state.gameCategories,
+      gameMechMatches: this.state.gameMechMatches,
+      gameCatMatches: this.state.gameMechMatches,
       toggleNav: this.toggleNav,
       getBadgeData: this.getBadgeData,
       getSessionData: this.getSessionData,
       getUserData: this.getUserData,
+      getGameData: this.getGameData,
       refreshState: this.updateState
     };
 

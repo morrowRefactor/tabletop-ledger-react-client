@@ -17,7 +17,9 @@ class AddGame extends Component {
             searchedGame: [],
             searchTitle: { value: '', touched: false },
             selectedGame: {},
-            duplicateGame: { value: { id: 0, title: '' }, status: false }
+            duplicateGame: { value: { id: 0, title: '' }, status: false },
+            newGameCategories: [],
+            newGameMechanics: []
         };
     };
 
@@ -57,6 +59,8 @@ class AddGame extends Component {
         .then(data => {
             const xml = new XMLParser().parseFromString(data);
             const gameArr = xml.children[0].children;
+            
+            // populate object of new game to create
             const image = gameArr.find(({name}) => name === 'image');
             const desc = gameArr.find(({name}) => name === 'description');
             const stats = gameArr.find(({name}) => name === 'statistics');
@@ -79,20 +83,118 @@ class AddGame extends Component {
                 yearPub: year.attributes.value,
                 bgg_rating: bggRating.attributes.value
             };
+
+            // arrays for new game categories and mechanics
+            let gameCategories = [];
+            let gameMechanics = [];
+            for(let i = 0; i < gameArr.length; i ++) {
+                if(gameArr[i].attributes.type === 'boardgamecategory') {
+                    const newTag = {
+                        cat_id: gameArr[i].attributes.id,
+                        name: gameArr[i].attributes.value
+                    };
+                    let newArr = gameCategories;
+                    newArr.push(newTag);
+                    gameCategories = newArr;
+                }
+
+                if(gameArr[i].attributes.type === 'boardgamemechanic') {
+                    const newTag = {
+                        mech_id: gameArr[i].attributes.id,
+                        name: gameArr[i].attributes.value
+                    };
+                    let newArr = gameMechanics;
+                    newArr.push(newTag);
+                    gameMechanics = newArr;
+                }
+            }
             
             this.setState({
-                selectedGame: newGame
+                selectedGame: newGame,
+                newGameCategories: gameCategories,
+                newGameMechanics: gameMechanics
             });
+
+            this.handleGameCatsMechs();
         })
         .catch(err => console.log(err));
     };
+
+    // for the newly submitted game, check whether any new game categories or mechanics need to be added to the db
+    // also add the categories and mechanics related to this game to the db
+    handleGameCatsMechs =() => {
+        let newCategories = [];
+        let newMechanics = [];
+
+        this.state.newGameCategories.forEach(cat => {
+            const checkCat = this.context.gameCategories.find(({cat_id}) => cat_id === cat);
+            if(!checkCat) {
+                let newArr = newCategories;
+                newArr.push(cat);
+                newCategories = newArr;
+            }
+        });
+
+        this.state.newGameMechanics.forEach(mech => {
+            const checkMech = this.context.gameMechanics.find(({mech_id}) => mech_id === mech);
+            if(!checkMech) {
+                let newArr = newMechanics;
+                newArr.push(mech);
+                newMechanics = newArr;
+            }
+        });
+
+        // post new game categories
+        if(newCategories.length > 0) {
+            fetch(`${config.API_ENDPOINT}/api/games-cat`, {
+                method: 'POST',
+                body: JSON.stringify(newCategories),
+                headers: {
+                    'content-type': 'application/json'
+                }
+            })
+            .then(res => {
+                if (!res.ok) {
+                    return res.json().then(error => {
+                        throw error
+                })
+                }
+                return res.json()
+            })
+            .catch(error => {
+                this.setState({ error })
+            })
+        }
+        
+        // post new game mechanics
+        if(newMechanics.length > 0) {
+            fetch(`${config.API_ENDPOINT}/api/games-mech`, {
+                method: 'POST',
+                body: JSON.stringify(newMechanics),
+                headers: {
+                    'content-type': 'application/json'
+                }
+            })
+            .then(res => {
+                if (!res.ok) {
+                    return res.json().then(error => {
+                        throw error
+                })
+                }
+                return res.json()
+            })
+            .catch(error => {
+                this.setState({ error })
+            })
+        }
+    }
 
     addSelectedGame = () => {
         fetch(`${config.API_ENDPOINT}/api/games`, {
             method: 'POST',
             body: JSON.stringify(this.state.selectedGame),
             headers: {
-              'content-type': 'application/json'
+            'content-type': 'application/json'
             }
         })
         .then(res => {
@@ -104,18 +206,87 @@ class AddGame extends Component {
             return res.json()
         })
         .then(newGame => {
-            if(this.props.match.params.uid) {
-                const linkText = newGame.title.replace(/\s+/g, '-').toLowerCase();
-                this.props.history.push(`/add-session/${this.props.match.params.uid}/new-game`)
-            }
-            else {
-                const linkText = newGame.title.replace(/\s+/g, '-').toLowerCase();
-                this.props.history.push(`/game/${newGame.id}/${linkText}`)
-            }
+            this.addGameCatsMechs(newGame);
         })
         .catch(error => {
             this.setState({ error })
         })
+    }
+
+    // add categories and mechanics for the new game added to the db
+    addGameCatsMechs = newGame => {
+        let newGameMechs = [];
+        let newGameCats = [];
+
+        for(let i = 0; i < this.state.newGameMechanics.length; i++) {
+            const gameMech = {
+                game_id: newGame.id,
+                mech_id: this.state.newGameMechanics[i].mech_id
+            };
+
+            let newArr = newGameMechs;
+            newArr.push(gameMech);
+            newGameMechs = newArr;
+        }
+
+        for(let i = 0; i < this.state.newGameCategories.length; i++) {
+            const gameCat = {
+                game_id: newGame.id,
+                cat_id: this.state.newGameCategories[i].cat_id
+            };
+
+            let newArr = newGameCats;
+            newArr.push(gameCat);
+            newGameCats = newArr;
+        }
+
+        fetch(`${config.API_ENDPOINT}/api/games-mech-matches`, {
+            method: 'POST',
+            body: JSON.stringify(newGameMechs),
+            headers: {
+                'content-type': 'application/json'
+            }
+        })
+        .then(res => {
+            if (!res.ok) {
+                return res.json().then(error => {
+                    throw error
+            })
+            }
+            return res.json()
+        })
+        .catch(error => {
+            this.setState({ error })
+        })
+
+        fetch(`${config.API_ENDPOINT}/api/games-cat-matches`, {
+            method: 'POST',
+            body: JSON.stringify(newGameCats),
+            headers: {
+                'content-type': 'application/json'
+            }
+        })
+        .then(res => {
+            if (!res.ok) {
+                return res.json().then(error => {
+                    throw error
+            })
+            }
+            return res.json()
+        })
+        .catch(error => {
+            this.setState({ error })
+        })
+
+        // if user came from submitting a session, send them back to session submission form
+        if(this.props.match.params.uid) {
+            const linkText = newGame.title.replace(/\s+/g, '-').toLowerCase();
+            this.props.history.push(`/add-session/${this.props.match.params.uid}/new-game`)
+        }
+        else {
+            const linkText = newGame.title.replace(/\s+/g, '-').toLowerCase();
+            this.props.history.push(`/game/${newGame.id}/${linkText}`)
+        }
     }
 
     checkDupeGame = () => {
@@ -200,6 +371,11 @@ class AddGame extends Component {
     render() {
         const titleError = this.validateTitle();
         const dupeError = this.dupeGame();
+
+        if(this.context.badgesMech.length < 1 || this.context.gameMechanics.length < 1) {
+            this.context.getBadgeData();
+            this.context.getGameData();
+        }
 
         return (
             <section className='AddGame'>
