@@ -19,6 +19,7 @@ class GamePageMain extends Component {
 
     getGames = () => {
         this.context.refreshState();
+        this.context.getSessionData();
     }
 
     updateTitle = title => {
@@ -79,11 +80,12 @@ class GamePageMain extends Component {
     };
 
     render() {
-        if(this.context.games.length < 1) {
+        if(this.context.games.length < 1 || this.context.sessions.length < 1) {
             this.getGames();
         }
         
-        const games = this.context.games.map(game =>
+        const trimGames = this.context.games.slice(0, 10);
+        const games = trimGames.map(game =>
             <GameBlock
                 key={game.id}
                 id={game.id}

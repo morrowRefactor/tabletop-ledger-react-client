@@ -241,7 +241,7 @@ class App extends Component {
       gameMechanics: this.state.gameMechanics,
       gameCategories: this.state.gameCategories,
       gameMechMatches: this.state.gameMechMatches,
-      gameCatMatches: this.state.gameMechMatches,
+      gameCatMatches: this.state.gameCatMatches,
       userGameCatLogs: this.state.userGameCatLogs,
       userGameMechLogs: this.state.userGameMechLogs,
       toggleNav: this.toggleNav,

@@ -5,6 +5,7 @@ import SessionPlayerForm from '../SessionPlayerForm/SessionPlayerForm';
 import AddSessionPlayerForm from '../AddSessionPlayerForm/AddSessionPlayerForm';
 import ValidationError from '../ValidationError/ValidationError';
 import APIContext from '../APIContext';
+import apiHelpers from '../api-helpers';
 import config from '../config';
 import './SessionForm.css';
 
@@ -20,7 +21,7 @@ class SessionForm extends Component {
             gameTitle: { value: '', touched: false },
             date: { value: '', touched: false },
             notes: { value: '', touched: false },
-            playerCount: [ 1 ],
+            playerCount: { value: [ 1 ], touched: false },
             playerCountWL: [ 1 ],
             scores: []
         };
@@ -71,11 +72,11 @@ class SessionForm extends Component {
     };
     
     addPlayer = () => {
-        let newCount = this.state.playerCount;
+        let newCount = this.state.playerCount.value;
         newCount.push(newCount.length + 1);
 
         this.setState({
-            playerCount: newCount
+            playerCount: { value: newCount, touched: true }
         });
     };
 
@@ -212,8 +213,8 @@ class SessionForm extends Component {
             }
         }
         else {
-            if(this.state.playerCount.length > 0) {
-                for(let i = 0; i < this.state.playerCount.length; i++) {
+            if(this.state.playerCount.touched === true && this.state.playerCount.value.length > 0) {
+                for(let i = 0; i < this.state.playerCount.value.length; i++) {
                     const id = this.state.playerCount[i];
                     const playerName = document.getElementById(`playerID[${id}]`);
                     const playerScore = document.getElementById(`scoreID[${id}]`);
@@ -295,7 +296,7 @@ class SessionForm extends Component {
         let gameCats = [];
         let gameMechs = [];
 
-        for(let i = 0; i < this.context.gameCatMatches; i++) {
+        for(let i = 0; i < this.context.gameCatMatches.length; i++) {
             if(this.context.gameCatMatches[i].game_id === gameID) {
                 let newArr = gameCats;
                 newArr.push(this.context.gameCatMatches[i].cat_id);
@@ -303,7 +304,7 @@ class SessionForm extends Component {
             }
         }
 
-        for(let i = 0; i < this.context.gameMechMatches; i++) {
+        for(let i = 0; i < this.context.gameMechMatches.length; i++) {
             if(this.context.gameMechMatches[i].game_id === gameID) {
                 let newArr = gameMechs;
                 newArr.push(this.context.gameMechMatches[i].mech_id);
@@ -353,6 +354,7 @@ class SessionForm extends Component {
             }
             else {
                 const updateCatLog = {
+                    id: catCheck.id,
                     uid: catCheck.uid,
                     cat_id: catCheck.cat_id,
                     sessions: catCheck.sessions + 1
@@ -380,6 +382,7 @@ class SessionForm extends Component {
             }
             else {
                 const updateMechLog = {
+                    id: mechCheck.id,
                     uid: mechCheck.uid,
                     mech_id: mechCheck.mech_id,
                     sessions: mechCheck.sessions + 1
@@ -390,6 +393,23 @@ class SessionForm extends Component {
                 updateUserMechLogs = newArr;
             }
         });
+
+        if(newUserCatLogs.length > 0) {
+            this.apiHelpers.postNewUserCatLogs(newUserCatLogs);
+        };
+        if(newUserMechLogs.length > 0) {
+            this.apiHelpers.postNewUserMechLogs(newUserMechLogs);
+        };
+        if(updateUserCatLogs.length > 0) {
+            updateUserCatLogs.forEach(log => {
+                apiHelpers.patchUserCatLogs(log);
+            });
+        };
+        if(updateUserMechLogs.length > 0) {
+            updateUserMechLogs.forEach(log => {
+                apiHelpers.patchUserMechLogs(log);
+            });  
+        };
     }
     
 
@@ -403,7 +423,7 @@ class SessionForm extends Component {
         let gameList = [];
         let user = { name: '' };
         const addGameLink = `/add-games/${parseInt(this.props.match.params.uid)}`
-        const sessionPlayers = this.state.playerCount.map(plyr => 
+        const sessionPlayers = this.state.playerCount.value.map(plyr => 
             <SessionPlayerForm
                 key={plyr}
                 id={plyr}

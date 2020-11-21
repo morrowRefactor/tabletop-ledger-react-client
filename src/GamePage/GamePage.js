@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import APIContext from '../APIContext';
 import GameTip from '../GameTip/GameTip';
 import UserReccoBlock from '../UserReccoBlock/UserReccoBlock';
+import he from 'he';
 import './GamePage.css';
 
 class GamePage extends Component {
@@ -11,10 +12,6 @@ class GamePage extends Component {
         this.context.refreshState();
         this.context.getUserData();
         this.context.getSessionData();
-    }
-
-    addUserGame = () => {
-
     }
 
     renderGameTips = () => {
