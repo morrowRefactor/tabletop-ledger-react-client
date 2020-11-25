@@ -16,19 +16,13 @@ class UserProfile extends Component {
         let userCatBadges;
         let userGameMatches = [];
         let usersGames;
-        let userGamePlays;
         const sessionLink = '/add-session/' + parseInt(this.props.match.params.uid);
         
-        if(this.context.users.length < 1) {
+        if(this.context.users.length < 1 || this.context.userBadgesMech.length < 1) {
             this.context.refreshState();
             this.context.getBadgeData();
             this.context.getSessionData();
-            this.context.getUserData(parseInt(this.props.match.params.uid));
-        }
-
-        if(this.context.userBadgesMech.length < 1 || this.context.sessions.length < 1) {
-            this.context.getBadgeData();
-            this.context.getSessionData();
+            this.context.getGameData();
             this.context.getUserData(parseInt(this.props.match.params.uid));
         }
 
@@ -46,22 +40,42 @@ class UserProfile extends Component {
             });
             
             // use the array of matched badges to display the badge names
-            getMechBadges.forEach(badge => 
-                mechBadgeMatches.push(
-                    this.context.badgesMech.find(({id}) => id === badge.badge_id)
-                )
-            );
-            userMechBadges = mechBadgeMatches.map(badge => 
-                <p className='userProfile_bagdesText' key={badge.id}>{badge.name}</p>
+            getMechBadges.forEach(badge => {
+                let badgeName;
+                for(let i = 0; i < this.context.gameMechanics.length; i++) {
+                    if(this.context.gameMechanics[i].mech_id === badge.badge_id) {
+                        badgeName = this.context.gameMechanics[i].name;
+                    }
+                }
+                    const tierName = this.context.badgeTiers.find(({ id }) => id === badge.tier_id);
+                    const userBadge = { id: badge.id, name: badgeName, tier: tierName.name };
+                    let newArr = mechBadgeMatches;
+                    newArr.push(userBadge);
+                    mechBadgeMatches = newArr;
+                }
             );
             
-            getCatBadges.forEach(badge =>
-              catBadgeMatches.push(
-                  this.context.badgesCat.find(({id}) => id === badge.badge_id)
-              )
+            userMechBadges = mechBadgeMatches.map(badge => 
+                <p className='userProfile_bagdesText' key={badge.id}>{badge.name} {badge.tier}</p>
             );
+            
+            getCatBadges.forEach(badge => {
+                    let badgeName;
+                    for(let i = 0; i < this.context.gameCategories.length; i++) {
+                        if(this.context.gameCategories[i].cat_id === badge.badge_id) {
+                            badgeName = this.context.gameCategories[i].name;
+                        }
+                    }
+                    const tierName = this.context.badgeTiers.find(({ id }) => id === badge.tier_id);
+                    const userBadge = { id: badge.id, name: badgeName, tier: tierName.name };
+                    let newArr = catBadgeMatches;
+                    newArr.push(userBadge);
+                    catBadgeMatches = newArr;
+                }
+            );
+            
             userCatBadges = catBadgeMatches.map(badge =>
-                <p className='userProfile_badgesText' key={badge.id}>{badge.name}</p>
+                <p className='userProfile_badgesText' key={badge.id}>{badge.name} {badge.tier}</p>
             );
 
             // get list of games associated to this user and populate an array with the relevant game objects

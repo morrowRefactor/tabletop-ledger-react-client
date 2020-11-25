@@ -29,6 +29,7 @@ class App extends Component {
       gameTips: [],
       badgesMech: [],
       badgesCat: [],
+      badgeTiers: [],
       userBadgesMech: [],
       userBadgesCat:[],
       userStandings: [],
@@ -75,9 +76,10 @@ class App extends Component {
       fetch(`${config.API_ENDPOINT}/api/badges-mech`),
       fetch(`${config.API_ENDPOINT}/api/badges-cat`),
       fetch(`${config.API_ENDPOINT}/api/user-badges-mech`),
-      fetch(`${config.API_ENDPOINT}/api/user-badges-cat`)
+      fetch(`${config.API_ENDPOINT}/api/user-badges-cat`),
+      fetch(`${config.API_ENDPOINT}/api/badge-tiers`)
     ])
-    .then(([badgesMechRes, badgesCatRes, userMechRes, userCatRes]) => {
+    .then(([badgesMechRes, badgesCatRes, userMechRes, userCatRes, badgeTierRes]) => {
       if (!badgesMechRes.ok)
         return badgesMechRes.json().then(e => Promise.reject(e));
       if (!badgesCatRes.ok)
@@ -86,14 +88,17 @@ class App extends Component {
         return userMechRes.json().then(e => Promise.reject(e));
       if (!userCatRes.ok)
         return userCatRes.json().then(e => Promise.reject(e));
-      return Promise.all([badgesMechRes.json(), badgesCatRes.json(), userMechRes.json(), userCatRes.json()]);
+      if (!badgeTierRes.ok)
+        return badgeTierRes.json().then(e => Promise.reject(e));
+      return Promise.all([badgesMechRes.json(), badgesCatRes.json(), userMechRes.json(), userCatRes.json(), badgeTierRes.json()]);
     })
-    .then(([badgesMech, badgesCat, userBadgesMech, userBadgesCat]) => {
+    .then(([badgesMech, badgesCat, userBadgesMech, userBadgesCat, badgeTiers]) => {
       this.setState({
         badgesMech: badgesMech,
         badgesCat: badgesCat,
         userBadgesMech: userBadgesMech,
-        userBadgesCat: userBadgesCat
+        userBadgesCat: userBadgesCat,
+        badgeTiers: badgeTiers
       })
     })
     .catch(error => {
@@ -233,6 +238,7 @@ class App extends Component {
       gameTips: this.state.gameTips,
       badgesMech: this.state.badgesMech,
       badgesCat: this.state.badgesCat,
+      badgeTiers: this.state.badgeTiers,
       userBadgesMech: this.state.userBadgesMech,
       userBadgesCat: this.state.userBadgesCat,
       userStandings: this.state.userStandings,

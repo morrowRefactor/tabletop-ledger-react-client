@@ -68,6 +68,7 @@ class AddGame extends Component {
             const year = gameArr.find(({name}) => name === 'yearpublished');
             const gameStats = stats.children[0].children;
             const bggRating = gameStats.find(({name}) => name === 'average');
+            const cleanRating = Math.round(bggRating.attributes.value * 10) / 10;
             let title;
             for(let i = 0; i < gameArr.length; i++) {
                 if(gameArr[i].attributes.type === 'primary') {
@@ -82,7 +83,7 @@ class AddGame extends Component {
                 description: desc.value,
                 image: image.value,
                 yearPub: year.attributes.value,
-                bgg_rating: bggRating.attributes.value
+                bgg_rating: cleanRating
             };
 
             // arrays for new game categories and mechanics

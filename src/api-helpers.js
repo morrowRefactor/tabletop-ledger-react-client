@@ -1,4 +1,3 @@
-import React from 'react';
 import config from './config';
 
 function postNewUserCatLogs(userCatLog) {
@@ -85,10 +84,98 @@ function patchUserMechLogs(userMechLog) {
     })
 };
 
+function postUserCatBadge(userCatBadge) {
+    fetch(`${config.API_ENDPOINT}/api/user-badges-cat`, {
+        method: 'POST',
+        body: JSON.stringify(userCatBadge),
+        headers: {
+          'content-type': 'application/json'
+        }
+    })
+    .then(res => {
+        if (!res.ok) {
+            return res.json().then(error => {
+                throw error
+            })
+        }
+        return res.json()
+    })
+    .catch(error => {
+        
+    })
+};
+
+function postUserMechBadge(userMechBadge) {
+    fetch(`${config.API_ENDPOINT}/api/user-badges-mech`, {
+        method: 'POST',
+        body: JSON.stringify(userMechBadge),
+        headers: {
+          'content-type': 'application/json'
+        }
+    })
+    .then(res => {
+        if (!res.ok) {
+            return res.json().then(error => {
+                throw error
+            })
+        }
+        return res.json()
+    })
+    .catch(error => {
+        
+    })
+};
+
+function patchUserCatBadge(id, userCatBadge) {
+    fetch(`${config.API_ENDPOINT}/api/user-badges-cat/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(userCatBadge),
+        headers: {
+          'content-type': 'application/json'
+        }
+    })
+    .then(res => {
+        if (!res.ok) {
+            return res.json().then(error => {
+                throw error
+            })
+        }
+        return res.json()
+    })
+    .catch(error => {
+        
+    })
+};
+
+function patchUserMechBadge(id, userMechBadge) {
+    fetch(`${config.API_ENDPOINT}/api/user-badges-mech/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(userMechBadge),
+        headers: {
+          'content-type': 'application/json'
+        }
+    })
+    .then(res => {
+        if (!res.ok) {
+            return res.json().then(error => {
+                throw error
+            })
+        }
+        return res.json()
+    })
+    .catch(error => {
+        
+    })
+};
+
 
 export default {
     postNewUserCatLogs,
     postNewUserMechLogs,
     patchUserCatLogs,
-    patchUserMechLogs
+    patchUserMechLogs,
+    postUserCatBadge,
+    postUserMechBadge,
+    patchUserCatBadge,
+    patchUserMechBadge
 };

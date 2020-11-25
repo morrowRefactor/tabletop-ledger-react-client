@@ -396,19 +396,113 @@ class SessionForm extends Component {
 
         if(newUserCatLogs.length > 0) {
             this.apiHelpers.postNewUserCatLogs(newUserCatLogs);
+
+            newUserCatLogs.forEach(log => {
+                const newUserBadgeCat = {
+                    uid: log.uid,
+                    badge_id: log.cat_id,
+                    tier_id: 1
+                };
+
+                this.apiHelpers.postUserCatBadge(newUserBadgeCat);
+            });
         };
         if(newUserMechLogs.length > 0) {
             this.apiHelpers.postNewUserMechLogs(newUserMechLogs);
+
+            newUserMechLogs.forEach(log => {
+                const newUserBadgeMech = {
+                    uid: log.uid,
+                    badge_id: log.mech_id,
+                    tier_id: 1
+                };
+
+                this.apiHelpers.postUserMechBadge(newUserBadgeMech);
+            });
         };
         if(updateUserCatLogs.length > 0) {
             updateUserCatLogs.forEach(log => {
                 apiHelpers.patchUserCatLogs(log);
             });
+
+            let userCatBadges = [];
+            for(let i = 0; i < this.context.userBadgesCat.length; i++) {
+                if(this.context.userBadgesCat[i].uid === this.state.hostID) {
+                    let newArr = userCatBadges;
+                    newArr.push(this.context.userBadgesCat[i]);
+                    userCatBadges = newArr;
+                }
+            }
+
+            updateUserCatLogs.forEach(log => {
+                if(log.sessions > 24 && log.sessions < 100) {
+                    const badgeToUpdate = userCatBadges.find(({ badge_id }) => badge_id === log.cat_id);
+                    if(badgeToUpdate.tier_id !== 2) {
+                        const updateUserBadgeCat = {
+                            uid: log.uid,
+                            badge_id: log.cat_id,
+                            tier_id: 2
+                        };
+    
+                        this.apiHelpers.patchUserCatBadge(badgeToUpdate.id, updateUserBadgeCat);
+                    }  
+                }
+
+                if(log.sessions > 99) {
+                    const badgeToUpdate = userCatBadges.find(({ badge_id }) => badge_id === log.cat_id);
+                    if(badgeToUpdate.tier_id !== 3) {
+                        const updateUserBadgeCat = {
+                            uid: log.uid,
+                            badge_id: log.cat_id,
+                            tier_id: 3
+                        };
+    
+                        this.apiHelpers.patchUserCatBadge(badgeToUpdate.id, updateUserBadgeCat);
+                    }  
+                }
+            })
         };
         if(updateUserMechLogs.length > 0) {
             updateUserMechLogs.forEach(log => {
                 apiHelpers.patchUserMechLogs(log);
-            });  
+            }); 
+            
+            let userMechBadges = [];
+            for(let i = 0; i < this.context.userBadgesMech.length; i++) {
+                if(this.context.userBadgesMech[i].uid === this.state.hostID) {
+                    let newArr = userMechBadges;
+                    newArr.push(this.context.userBadgesMech[i]);
+                    userMechBadges = newArr;
+                }
+            }
+
+            updateUserMechLogs.forEach(log => {
+                if(log.sessions > 24 && log.sessions < 100) {
+                    const badgeToUpdate = userMechBadges.find(({ badge_id }) => badge_id === log.mech_id);
+                    if(badgeToUpdate.tier_id !== 2) {
+                        const updateUserBadgeMech = {
+                            uid: log.uid,
+                            badge_id: log.mech_id,
+                            tier_id: 2
+                        };
+    
+                        this.apiHelpers.patchUserMechBadge(badgeToUpdate.id, updateUserBadgeMech);
+                    }  
+                }
+
+                if(log.sessions > 99) {
+                    const badgeToUpdate = userMechBadges.find(({ badge_id }) => badge_id === log.mech_id);
+                    if(badgeToUpdate.tier_id !== 3) {
+                        const updateUserBadgeMech = {
+                            uid: log.uid,
+                            badge_id: log.mech_id,
+                            tier_id: 3
+                        };
+    
+                        this.apiHelpers.patchUserMechBadge(badgeToUpdate.id, updateUserBadgeMech);
+                    }  
+                }
+            })
         };
     }
     
@@ -441,6 +535,7 @@ class SessionForm extends Component {
             this.context.refreshState();
             this.context.getUserData();
             this.context.getGameData();
+            this.context.getBadgeData();
         }
 
         //check whether a new game was just added and state needs to be refreshed

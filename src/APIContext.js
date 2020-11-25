@@ -13,6 +13,7 @@ export default React.createContext({
     gameTips: [],
     badgesMech: [],
     badgesCat: [],
+    badgeTiers: [],
     userBadgesMech: [],
     userBadgesCat:[],
     userStandings: [],
