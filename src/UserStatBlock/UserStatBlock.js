@@ -9,7 +9,7 @@ class UserStatBlock extends Component {
         let boardStat;
 
         if(this.props.board === 'winRatio') {
-            boardStat = this.props.ratio;
+            boardStat = parseFloat(this.props.ratio * 100).toFixed(2)+'%';
         }
         if(this.props.board === 'mostWins') {
             boardStat = this.props.wins;
@@ -20,11 +20,8 @@ class UserStatBlock extends Component {
         
         return (
             <section className='UserStatBlock'>
-                <div className='userStatBlockImage'>[User Image]</div>
-                <section className='UserStatBlock_stats'>
-                    <p>{this.props.name}</p>
-                    <p>{boardStat}</p>
-                </section>
+                <p>{this.props.name}</p>
+                <p>{boardStat}</p>
             </section>
         );
     }

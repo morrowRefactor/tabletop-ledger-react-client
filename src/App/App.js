@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { Route, withRouter } from 'react-router-dom';
 import NavBar from '../NavBar/NavBar';
 import Homepage from '../Homepage/Homepage';
+import PrivateRoute from '../Utils/PrivateRoute';
+import PublicOnlyRoute from '../Utils/PublicOnlyRoute';
+import UserLogin from '../UserLogin/UserLogin';
+import UserRegistration from '../UserRegistration/UserRegistration';
 import GamePageMain from '../GamePageMain/GamePageMain';
 import GamePage from '../GamePage/GamePage';
 import Leaderboard from '../Leaderboard/Leaderboard';
@@ -17,6 +21,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      thisUser: {},
       navbar: 'hidden',
       games: [],
       users: [],
@@ -70,6 +75,10 @@ class App extends Component {
       console.error({error});
     });
   }
+
+  componentDidMount = () => {
+    this.updateState();
+  };
 
   getBadgeData = () => {
     Promise.all([
@@ -212,8 +221,17 @@ class App extends Component {
     });
   }
 
-  componentDidMount = () => {
-    this.updateState();
+  setUser = u => {
+    const user = {
+      id: u.id,
+      name: u.name,
+      about: u.about,
+      joined_date: u.joined_date
+    };
+
+    this.setState({
+      thisUser: user
+    });
   }
 
   // toggle visibility of navbar
@@ -226,6 +244,7 @@ class App extends Component {
 
   render() {
     const value = {
+      thisUser: this.state.thisUser,
       navbar: this.state.navbar,
       games: this.state.games,
       users: this.state.users,
@@ -250,6 +269,7 @@ class App extends Component {
       gameCatMatches: this.state.gameCatMatches,
       userGameCatLogs: this.state.userGameCatLogs,
       userGameMechLogs: this.state.userGameMechLogs,
+      setUser: this.setUser,
       toggleNav: this.toggleNav,
       getBadgeData: this.getBadgeData,
       getSessionData: this.getSessionData,
@@ -276,21 +296,31 @@ class App extends Component {
             path='/game/:game_id'
             component={GamePage}
           />
-          <Route
+          <PrivateRoute
             path='/gamer/:uid'
             component={UserProfile}
           />
-          <Route
+          <PrivateRoute
             path={['/add-games/:uid', '/add-games']}
             component={AddGame}
           />
-          <Route
+          <PrivateRoute
             path='/add-session/:uid'
             component={SessionForm}
           />
-          <Route
+          <PrivateRoute
             path='/session/:session_id'
             component={SessionPage}
+          />
+          <Route
+            exact
+            path='/login'
+            component={UserLogin}
+          />
+          <Route
+            exact
+            path='/create-account'
+            component={UserRegistration}
           />
           <Route
             exact

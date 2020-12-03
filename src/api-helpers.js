@@ -1,4 +1,34 @@
+import TokenService from './services/token-service';
 import config from './config';
+
+function postNewUserStandings(id) {
+    const newUserStandings = {
+        uid: id,
+        wins: 0,
+        losses: 0,
+        sessions: 0
+    };
+
+    fetch(`${config.API_ENDPOINT}/api/user-standings`, {
+        method: 'POST',
+        body: JSON.stringify(newUserStandings),
+        headers: {
+          'content-type': 'application/json',
+          'authorization': `bearer ${TokenService.getAuthToken()}`
+        }
+    })
+    .then(res => {
+        if (!res.ok) {
+            return res.json().then(error => {
+                throw error
+            })
+        }
+        return res.json()
+    })
+    .catch(error => {
+        
+    })
+};
 
 function postNewUserCatLogs(userCatLog) {
     fetch(`${config.API_ENDPOINT}/api/user-game-cat-logs`, {
@@ -170,6 +200,7 @@ function patchUserMechBadge(id, userMechBadge) {
 
 
 export default {
+    postNewUserStandings,
     postNewUserCatLogs,
     postNewUserMechLogs,
     patchUserCatLogs,
