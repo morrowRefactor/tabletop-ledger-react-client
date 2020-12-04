@@ -6,7 +6,6 @@ import AddSelectedGame from '../AddSelectedGame/AddSelectedGame';
 import ValidationError from '../ValidationError/ValidationError';
 import APIContext from '../APIContext';
 import config from '../config';
-import he from 'he';
 import './AddGame.css';
 
 class AddGame extends Component {

@@ -15,6 +15,11 @@
     margin-bottom: 5px;
 }
 
+.userBoardGameEditLink {
+    display: inline-block;
+    width: 100%;
+}
+
 .userBoardGameRatings {
     display: flex;
     flex-direction: row;

@@ -1,0 +1,20 @@
+.UserRegistration_form {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+.userRegistration_formFields > label {
+    display: inline-block;
+    width: 100%;
+}
+
+.userRegistration_formFields > input {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+#userInfo {
+    height: 50px;
+}

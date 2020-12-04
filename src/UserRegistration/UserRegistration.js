@@ -70,7 +70,7 @@ class UserRegistration extends Component {
     validateUserPassword = () => {
         const password = this.state.userPassword.value.trim();
         if (password.length === 0) {
-          return 'A password is required';
+          return 'Password must contain at least one capital letter, one number, and one special character';
         };
     };
 
@@ -84,39 +84,46 @@ class UserRegistration extends Component {
                     className='UserRegistration_form'
                     onSubmit={this.handleSubmitJwtAuth}
                 >
-                    <label htmlFor='userName'>
-                        User Name
-                    </label>
-                    <input
-                        type='text'
-                        id='userName'
-                        onChange={e => this.updateUserName(e.target.value)}
-                        required
-                    />
-                    {this.state.userName.touched && (
-                        <ValidationError message={nameError} />
-                    )}
-                    <label htmlFor='userInfo'>
-                        About
-                    </label>
-                    <input
-                        type='text'
-                        id='userInfo'
-                        onChange={e => this.updateUserInfo(e.target.value)}
-                        required
-                    />
-                    <label htmlFor='userPassword'>
-                        Password
-                    </label>
-                    <input
-                        type='text'
-                        id='userPassword'
-                        onChange={e => this.updatePassword(e.target.value)}
-                        required
-                    />
-                    {this.state.userPassword.touched && (
-                        <ValidationError message={passwordError} />
-                    )}
+                    <h1>Create an account</h1>
+                    <section className='userRegistration_formFields'>
+                        <label htmlFor='userName'>
+                            User Name
+                        </label>
+                        <input
+                            type='text'
+                            id='userName'
+                            onChange={e => this.updateUserName(e.target.value)}
+                            required
+                        />
+                        {this.state.userName.touched && (
+                            <ValidationError message={nameError} />
+                        )}
+                    </section>
+                    <section className='userRegistration_formFields'>
+                        <label htmlFor='userPassword'>
+                            Password
+                        </label>
+                        <input
+                            type='text'
+                            id='userPassword'
+                            onChange={e => this.updatePassword(e.target.value)}
+                            required
+                        />
+                        {this.state.userPassword.touched && (
+                            <ValidationError message={passwordError} />
+                        )}
+                    </section>
+                    <section className='userRegistration_formFields'>
+                        <label htmlFor='userInfo'>
+                            About
+                        </label>
+                        <input
+                            type='textbox'
+                            id='userInfo'
+                            onChange={e => this.updateUserInfo(e.target.value)}
+                            required
+                        />
+                    </section>
                     <button 
                         type='submit'
                     >

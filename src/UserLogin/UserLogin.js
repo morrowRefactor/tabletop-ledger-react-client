@@ -69,30 +69,35 @@ class UserLogin extends Component {
                     className='UserLogin_form'
                     onSubmit={this.handleSubmitJwtAuth}
                 >
-                    <label htmlFor='userName'>
-                        User Name
-                    </label>
-                    <input
-                        type='text'
-                        id='userName'
-                        onChange={e => this.updateUserName(e.target.value)}
-                        required
-                    />
-                    {this.state.userName.touched && (
-                        <ValidationError message={nameError} />
-                    )}
-                    <label htmlFor='userPassword'>
-                        Password
-                    </label>
-                    <input
-                        type='text'
-                        id='userPassword'
-                        onChange={e => this.updatePassword(e.target.value)}
-                        required
-                    />
-                    {this.state.userPassword.touched && (
-                        <ValidationError message={passwordError} />
-                    )}
+                    <h1>Login to your account</h1>
+                    <section className='userLogin_formFields'>
+                        <label htmlFor='userName'>
+                            User Name
+                        </label>
+                        <input
+                            type='text'
+                            id='userName'
+                            onChange={e => this.updateUserName(e.target.value)}
+                            required
+                        />
+                        {this.state.userName.touched && (
+                            <ValidationError message={nameError} />
+                        )}
+                    </section>
+                    <section className='userLogin_formFields'>
+                        <label htmlFor='userPassword'>
+                            Password
+                        </label>
+                        <input
+                            type='text'
+                            id='userPassword'
+                            onChange={e => this.updatePassword(e.target.value)}
+                            required
+                        />
+                        {this.state.userPassword.touched && (
+                            <ValidationError message={passwordError} />
+                        )}
+                    </section>
                     <button 
                         type='submit'
                     >

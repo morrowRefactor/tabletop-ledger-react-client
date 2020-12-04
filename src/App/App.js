@@ -3,7 +3,6 @@ import { Route, withRouter } from 'react-router-dom';
 import NavBar from '../NavBar/NavBar';
 import Homepage from '../Homepage/Homepage';
 import PrivateRoute from '../Utils/PrivateRoute';
-import PublicOnlyRoute from '../Utils/PublicOnlyRoute';
 import UserLogin from '../UserLogin/UserLogin';
 import UserRegistration from '../UserRegistration/UserRegistration';
 import GamePageMain from '../GamePageMain/GamePageMain';
@@ -13,6 +12,7 @@ import UserProfile from '../UserProfile/UserProfile';
 import AddGame from '../AddGame/AddGame';
 import SessionForm from '../SessionForm/SessionForm';
 import SessionPage from '../SessionPage/SessionPage';
+import EditUserGame from '../EditUserGame/EditUserGame';
 import APIContext from '../APIContext';
 import config from '../config';
 import './App.css';
@@ -148,9 +148,12 @@ class App extends Component {
 
   getUserData = uid => {
     let user = uid;
-    if(!uid) {
+    const userSessionCheck = this.state.sessions.find(({ uid }) => uid === user);
+
+    if(!userSessionCheck || !uid) {
       user = 0
     }
+
     Promise.all([
       fetch(`${config.API_ENDPOINT}/api/user-games`),
       fetch(`${config.API_ENDPOINT}/api/user-reccos`),
@@ -311,6 +314,10 @@ class App extends Component {
           <PrivateRoute
             path='/session/:session_id'
             component={SessionPage}
+          />
+          <PrivateRoute
+            path='/edit-game/:game_id'
+            component={EditUserGame}
           />
           <Route
             exact

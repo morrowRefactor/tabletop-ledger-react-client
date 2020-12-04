@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import jwt_decode from 'jwt-decode';
 import TokenService from '../services/token-service';
 import APIContext from '../APIContext';
 import './NavBar.css';
@@ -13,8 +14,9 @@ class Navbar extends Component {
 
     renderLogoutLink() {
         return (
-          <li className='topNavLink'>
+          <li>
             <Link
+              className='topNavLink'
               onClick={this.handleLogoutClick}
               to='/'>
               Logout
@@ -24,12 +26,24 @@ class Navbar extends Component {
     };
 
     renderProfileLink() {
-      const id =this.context.thisUser.id;
+      let id =this.context.thisUser.id;
+
+      // check whether a user is logged in, but dont populated in the api context
+      const token = TokenService.getAuthToken();
+      if(!this.context.thisUser.id && token.length > 20) {
+          const user = jwt_decode(token);
+          id = user.user_id;
+      }
       const idLink = `/gamer/${id}`;
 
       return (
-          <li className='topNavLink'>
-            <Link to={idLink}>My Profile</Link>
+          <li>
+            <Link 
+              to={idLink}
+              className='topNavLink'
+            >
+              My Profile
+            </Link>
           </li>
       );
   };

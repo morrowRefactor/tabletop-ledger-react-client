@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import UserGameBlock from '../UserGameBlock/UserGameBlock';
 import APIContext from '../APIContext';
+import APIHellpers from '../api-helpers';
 import './UserProfile.css';
 
 class UserProfile extends Component {
@@ -17,8 +18,8 @@ class UserProfile extends Component {
         let userGameMatches = [];
         let usersGames;
         const sessionLink = '/add-session/' + parseInt(this.props.match.params.uid);
-        
-        if(this.context.users.length < 1 || this.context.userBadgesMech.length < 1) {
+
+        if(this.context.users.length < 1 || this.context.userGames.length < 1) {
             this.context.refreshState();
             this.context.getBadgeData();
             this.context.getSessionData();
@@ -121,16 +122,22 @@ class UserProfile extends Component {
                 <Link className='userProfileSessionLink' to={sessionLink}>Add a game session</Link>
                 <section className='UserProfile_stats'>
                     <h3>Stats</h3>
-                    <p>Total games sessions: {userSessions.sessions}</p>
-                    <p>Total wins: {userSessions.wins}</p>
-                    <p>Win ratio: {(userSessions.wins / userSessions.sessions) * 100}%</p>
+                        <p>Total games sessions: {userSessions.sessions}</p>
+                        <p>Total wins: {userSessions.wins}</p>
+                        <p>Win ratio: {(userSessions.wins / userSessions.sessions) * 100}%</p>
                 </section>
                 <section className='UserProfile_badges'>
                     <h3>Your Badges</h3>
                     <p className='userProfile_badgesHeader'>Mechanics Badges</p>
-                    {userMechBadges}
+                    {mechBadgeMatches.length > 1
+                        ? userMechBadges
+                        : 'No badges yet'
+                    }
                     <p className='userProfile_badgesHeader'>Category Badges</p>
-                    {userCatBadges}
+                    {catBadgeMatches.length > 1
+                        ? userCatBadges
+                        : 'No badges yet'
+                    }
                 </section>
                 <section className='UserProfile_games'>
                     <h2>Your Games</h2>

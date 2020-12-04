@@ -1,6 +1,26 @@
 import TokenService from './services/token-service';
 import config from './config';
 
+function getUserGameSessions(id) {
+    fetch(`${config.API_ENDPOINT}/api/sessions/user-sessions/${id}`, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json'
+        }
+    })
+    .then(res => {
+        if (!res.ok) {
+            return res.json().then(error => {
+                throw error
+            })
+        }
+        console.log('res', res.json())
+        return res.json()
+    })
+    .catch(error => {
+    })
+}
+
 function postNewUserStandings(id) {
     const newUserStandings = {
         uid: id,
@@ -26,7 +46,6 @@ function postNewUserStandings(id) {
         return res.json()
     })
     .catch(error => {
-        
     })
 };
 
@@ -35,7 +54,8 @@ function postNewUserCatLogs(userCatLog) {
         method: 'POST',
         body: JSON.stringify(userCatLog),
         headers: {
-          'content-type': 'application/json'
+          'content-type': 'application/json',
+          'authorization': `bearer ${TokenService.getAuthToken()}`
         }
     })
     .then(res => {
@@ -56,7 +76,8 @@ function postNewUserMechLogs(userMechLog) {
         method: 'POST',
         body: JSON.stringify(userMechLog),
         headers: {
-          'content-type': 'application/json'
+          'content-type': 'application/json',
+          'authorization': `bearer ${TokenService.getAuthToken()}`
         }
     })
     .then(res => {
@@ -77,7 +98,8 @@ function patchUserCatLogs(userCatLog) {
         method: 'PATCH',
         body: JSON.stringify(userCatLog),
         headers: {
-          'content-type': 'application/json'
+          'content-type': 'application/json',
+          'authorization': `bearer ${TokenService.getAuthToken()}`
         }
     })
     .then(res => {
@@ -98,7 +120,8 @@ function patchUserMechLogs(userMechLog) {
         method: 'PATCH',
         body: JSON.stringify(userMechLog),
         headers: {
-          'content-type': 'application/json'
+          'content-type': 'application/json',
+          'authorization': `bearer ${TokenService.getAuthToken()}`
         }
     })
     .then(res => {
@@ -119,7 +142,8 @@ function postUserCatBadge(userCatBadge) {
         method: 'POST',
         body: JSON.stringify(userCatBadge),
         headers: {
-          'content-type': 'application/json'
+          'content-type': 'application/json',
+          'authorization': `bearer ${TokenService.getAuthToken()}`
         }
     })
     .then(res => {
@@ -140,7 +164,8 @@ function postUserMechBadge(userMechBadge) {
         method: 'POST',
         body: JSON.stringify(userMechBadge),
         headers: {
-          'content-type': 'application/json'
+          'content-type': 'application/json',
+          'authorization': `bearer ${TokenService.getAuthToken()}`
         }
     })
     .then(res => {
@@ -161,7 +186,8 @@ function patchUserCatBadge(id, userCatBadge) {
         method: 'PATCH',
         body: JSON.stringify(userCatBadge),
         headers: {
-          'content-type': 'application/json'
+          'content-type': 'application/json',
+          'authorization': `bearer ${TokenService.getAuthToken()}`
         }
     })
     .then(res => {
@@ -182,7 +208,8 @@ function patchUserMechBadge(id, userMechBadge) {
         method: 'PATCH',
         body: JSON.stringify(userMechBadge),
         headers: {
-          'content-type': 'application/json'
+          'content-type': 'application/json',
+          'authorization': `bearer ${TokenService.getAuthToken()}`
         }
     })
     .then(res => {
@@ -200,6 +227,7 @@ function patchUserMechBadge(id, userMechBadge) {
 
 
 export default {
+    getUserGameSessions,
     postNewUserStandings,
     postNewUserCatLogs,
     postNewUserMechLogs,

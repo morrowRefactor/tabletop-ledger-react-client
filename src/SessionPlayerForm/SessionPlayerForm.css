@@ -1,8 +1,24 @@
-.SessionForm_sessionPlayer > label {
-    display: inline-block;
-    width: 100%;
+.SessionForm_sessionPlayer {
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    padding: 10px;
+    margin: 0px auto 20px auto;
 }
 
-.SessionForm_sessionPlayer > input {
+.sessionForm_sessionPlayerInfoFields {
+    width: 90%;
+    margin-left: 20px;
+    text-align: left;
+}
+
+.sessionForm_sessionPlayerInfoFields > label {
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+}
+
+.sessionForm_sessionPlayerInfoFields > input {
     margin-bottom: 10px;
+    width: 80%;
 }

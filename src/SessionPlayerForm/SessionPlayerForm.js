@@ -12,31 +12,35 @@ class SessionPlayer extends Component {
 
         return (
             <section className='SessionForm_sessionPlayer'>
-                <label htmlFor='winner'>
-                    Winner
-                </label>
-                <input
-                    id={winnerID}
-                    type='checkbox'
-                />
-                <label htmlFor='sessionPlayerName'>
-                    Player Name
-                </label>
-                <input
-                    type='text'
-                    id={playerID}
-                    placeholder='Jane Doe'
-                    required
-                />
-                <label htmlFor='sessionPlayerScore'>
-                    Score
-                </label>
-                <input
-                    type='text'
-                    id={scoreID}
-                    placeholder='100'
-                    required
-                />
+                <div>
+                    <label htmlFor='winner'>
+                        Winner
+                    </label>
+                    <input
+                        id={winnerID}
+                        type='checkbox'
+                    />
+                </div>
+                <div className='sessionForm_sessionPlayerInfoFields'>
+                    <label htmlFor='sessionPlayerName'>
+                        Player Name
+                    </label>
+                    <input
+                        type='text'
+                        id={playerID}
+                        placeholder='Jane Doe'
+                        required
+                    />
+                    <label htmlFor='sessionPlayerScore'>
+                        Score
+                    </label>
+                    <input
+                        type='text'
+                        id={scoreID}
+                        placeholder='100'
+                        required
+                    />
+                </div>
             </section>
         );
     }

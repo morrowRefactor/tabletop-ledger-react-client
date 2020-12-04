@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import APIContext from '../APIContext';
 import GameTip from '../GameTip/GameTip';
 import UserReccoBlock from '../UserReccoBlock/UserReccoBlock';
-import he from 'he';
+import TokenService from '../services/token-service';
+import jwt_decode from 'jwt-decode';
+import config from '../config';
 import './GamePage.css';
 
 class GamePage extends Component {
@@ -12,6 +15,43 @@ class GamePage extends Component {
         this.context.refreshState();
         this.context.getUserData();
         this.context.getSessionData();
+    }
+
+    addUserGame = gameId => {
+        let userGame = {
+            uid: this.context.thisUser.id,
+            game_id: gameId
+        };
+
+        // check whether a user is logged in, but dont populated in the api context
+        const token = TokenService.getAuthToken();
+        if(!this.context.thisUser.id && token.length > 20) {
+            const user = jwt_decode(token);
+            userGame.uid = user.user_id
+        }
+        
+        fetch(`${config.API_ENDPOINT}/api/user-games`, {
+            method: 'POST',
+            body: JSON.stringify(userGame),
+            headers: {
+              'content-type': 'application/json',
+              'authorization': `bearer ${TokenService.getAuthToken()}`
+            }
+        })
+        .then(res => {
+            if (!res.ok) {
+                return res.json().then(error => {
+                    throw error
+                })
+            }
+            return res.json()
+        })
+        .then(() => {
+            this.context.getUserData();
+            this.props.history.push(`/gamer/${userGame.uid}`);
+        })
+        .catch(error => {  
+        })
     }
 
     renderGameTips = () => {
@@ -69,6 +109,15 @@ class GamePage extends Component {
         }
     }
 
+    renderAddGameButton = () => {
+        const thisGame = this.context.games.find(({ id }) => id === parseInt(this.props.match.params.game_id));
+        return (
+            <div className='gamePageUserGameAdd'>
+                <button onClick={() => this.addUserGame(thisGame.id)}>Add to my games</button>
+            </div>
+        );
+    };
+
     render() {
         const gameCheck = this.context.games.find(({ id }) => id === parseInt(this.props.match.params.game_id));
         let thisGame = { title: '' };
@@ -91,9 +140,10 @@ class GamePage extends Component {
             <section className='GamePage'>
                 <h1>{thisGame.title}</h1>
                 <img className='gamePageImage' src={thisGame.image} alt={thisGame.title} />
-                <div className='gamePageUserGameAdd'>
-                    <button>Add to my games</button>
-                </div>
+                {TokenService.hasAuthToken()
+                    ? this.renderAddGameButton()
+                    : ''
+                }
                 <p>Total sessions logged on TTL: {gamePlays}</p>
                 <p>BGG Rating: {thisGame.bgg_rating}</p>
                 <p>{thisGame.description}</p>
@@ -106,4 +156,4 @@ class GamePage extends Component {
     }
 }
 
-export default GamePage;
+export default withRouter(GamePage);

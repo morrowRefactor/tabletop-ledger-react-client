@@ -6,6 +6,7 @@ import AddSessionPlayerForm from '../AddSessionPlayerForm/AddSessionPlayerForm';
 import ValidationError from '../ValidationError/ValidationError';
 import APIContext from '../APIContext';
 import apiHelpers from '../api-helpers';
+import TokenService from '../services/token-service';
 import config from '../config';
 import './SessionForm.css';
 
@@ -101,7 +102,8 @@ class SessionForm extends Component {
             method: 'POST',
             body: JSON.stringify(newSession),
             headers: {
-              'content-type': 'application/json'
+              'content-type': 'application/json',
+              'authorization': `bearer ${TokenService.getAuthToken()}`
             }
         })
         .then(res => {
@@ -139,7 +141,8 @@ class SessionForm extends Component {
             method: 'POST',
             body: JSON.stringify(newNote),
             headers: {
-              'content-type': 'application/json'
+              'content-type': 'application/json',
+              'authorization': `bearer ${TokenService.getAuthToken()}`
             }
         })
         .then(res => {
@@ -237,7 +240,8 @@ class SessionForm extends Component {
             method: 'POST',
             body: JSON.stringify(newSessionScores),
             headers: {
-            'content-type': 'application/json'
+                'content-type': 'application/json',
+                'authorization': `bearer ${TokenService.getAuthToken()}`
             }
         })
         .then(res => {
@@ -272,7 +276,8 @@ class SessionForm extends Component {
             method: 'PATCH',
             body: JSON.stringify(newStats),
             headers: {
-              'content-type': 'application/json'
+              'content-type': 'application/json',
+              'authorization': `bearer ${TokenService.getAuthToken()}`
             }
         })
         .then(res => {
@@ -624,63 +629,86 @@ class SessionForm extends Component {
                             onChange={e => this.updateNotes(e.target.value)}
                         />
                     </section>
-                    <h3>Scored Sessions</h3>
+                    <h3 className='sessionForm_Header'>Scored Sessions</h3>
                     <section className='sessionForm_formField'>
                         <label htmlFor='sessionPlayer'>
                             Session Players
                         </label>
-                        <label htmlFor='winner'>
-                            Winner
-                        </label>
-                        <input
-                            id='hostWin'
-                            type='checkbox'
-                        />
-                        <label htmlFor='sessionPlayerName'>
-                            You
-                        </label>
-                        <input
-                            type='text'
-                            id='hostName'
-                            defaultValue={user.name}
-                            required
-                        />
-                        <label htmlFor='sessionPlayerScore'>
-                            Score
-                        </label>
-                        <input
-                            type='text'
-                            id='hostScore'
-                            placeholder='100'
-                            required
-                        />
+                        <section className='sessionForm_playerInfo'>
+                            <div>
+                                <label htmlFor='winner'>
+                                    Winner
+                                </label>
+                                <input
+                                    id='hostWin'
+                                    type='checkbox'
+                                />
+                            </div>
+                            <div className='sessionForm_playerInfoFields'>
+                                <label htmlFor='sessionPlayerName'>
+                                    You
+                                </label>
+                                <input
+                                    type='text'
+                                    id='hostName'
+                                    defaultValue={user.name}
+                                    required
+                                />
+                                <label htmlFor='sessionPlayerScore'>
+                                    Score
+                                </label>
+                                <input
+                                    type='text'
+                                    id='hostScore'
+                                    placeholder='100'
+                                    required
+                                />
+                            </div>
+                        </section>
                         {sessionPlayers}
-                        <button className='sessionFrom_addPlayer' type='button' onClick={e => this.addPlayer()}>Add another player</button>
+                        <div className='AddDestinationForm_buttons'>
+                            <button className='sessionFrom_addPlayer' type='button' onClick={e => this.addPlayer()}>Add another player</button>
+                            <p></p>
+                            <button 
+                                type='button'
+                                onClick={e => this.handleSubmit()}
+                            >
+                                Add Session
+                            </button>
+                            {' '}
+                            <button type='button' onClick={e => this.handleClickCancel}>
+                                Cancel
+                            </button>
+                        </div>
                     </section>
-                    <h3>Win/Loss Sessions</h3>
+                    <h3 className='sessionForm_Header'>Win/Loss Sessions</h3>
                     <section className='sessionForm_winLoss'>
-                        <label htmlFor='winLoss'>
-                            Did you win?
-                        </label>
-                        <select
-                            type='select'
-                            id='winLoss'
-                        >
-                            <option>Select</option>
-                            <option>Yes</option>
-                            <option>No</option>
-                        </select>
-                        <label htmlFor='sessionPlayerName'>
-                            You
-                        </label>
-                        <input
-                            type='text'
-                            id='hostNameWL'
-                            defaultValue={user.name}
-                            required
-                        />
+                        <div className='sessionForm_winLossField'>
+                            <label htmlFor='winLoss'>
+                                Did you win?
+                            </label>
+                            <select
+                                type='select'
+                                id='winLoss'
+                            >
+                                <option>Select</option>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                        <div className='sessionForm_winLossField'>
+                            <label htmlFor='sessionPlayerName'>
+                                You
+                            </label>
+                            <input
+                                type='text'
+                                id='hostNameWL'
+                                defaultValue={user.name}
+                                required
+                            />
+                        </div>
                         {sessionPlayersWL}
-                        <button className='sessionFrom_addPlayer' type='button' onClick={e => this.addPlayerWL()}>Add another player</button>
+                        <button className='sessionForm_addPlayer' type='button' onClick={e => this.addPlayerWL()}>Add another player</button>
                     </section>
                     <div className='AddDestinationForm_buttons'>
                         <button 

@@ -1,7 +1,6 @@
 .SessionForm {
     width: 90%;
-    margin-right: auto;
-    margin-left: auto;
+    margin: 0px auto 50px auto;
 }
 
 .sessionForm_formField {
@@ -20,10 +19,52 @@
     margin-right: auto;
 }
 
-#gameTitle:hover {
-    cursor: vertical-text;
-}
-
 .gameTitleHelperText {
     font-size: 14px;
+}
+
+.sessionForm_Header {
+    display: inline-block;
+    width: 90%;
+    padding-top: 15px;
+    border-top: 2px solid rgb(230, 230, 230);
+}
+
+.sessionForm_playerInfo {
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    padding: 10px;
+    margin: 0px auto 20px auto;
+    background-color: rgb(230, 230, 230);
+}
+
+.sessionForm_playerInfoFields {
+    width: 90%;
+    margin-left: 20px;
+    text-align: left;
+}
+
+.sessionForm_playerInfoFields > label,
+.sessionForm_winLossField > label {
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+}
+
+.sessionForm_playerInfoFields > input {
+    margin-bottom: 10px;
+    width: 80%;
+}
+
+.sessionForm_winLossField {
+    width: 90%;
+    margin: 0px auto 10px auto;
+    text-align: left;
+    padding-left: 10%;
+}
+
+.sessionForm_addPlayer {
+    display: inline-block;
+    margin-bottom: 20px;
 }

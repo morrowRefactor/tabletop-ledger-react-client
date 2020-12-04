@@ -1,0 +1,17 @@
+.SessionForm_sessionPlayerWL {
+    width: 90%;
+    margin: 0px auto 10px auto;
+    text-align: left;
+    padding-left: 10%;
+}
+
+.SessionForm_sessionPlayerWL > label {
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+}
+
+.SessionForm_sessionPlayerWL > input {
+    margin-bottom: 10px;
+    width: 80%;
+}
