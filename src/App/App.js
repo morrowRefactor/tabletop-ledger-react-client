@@ -3,6 +3,7 @@ import { Route, withRouter } from 'react-router-dom';
 import NavBar from '../NavBar/NavBar';
 import Homepage from '../Homepage/Homepage';
 import PrivateRoute from '../Utils/PrivateRoute';
+import PublicOnlyRoute from '../Utils/PublicOnlyRoute';
 import UserLogin from '../UserLogin/UserLogin';
 import UserRegistration from '../UserRegistration/UserRegistration';
 import GamePageMain from '../GamePageMain/GamePageMain';
@@ -329,7 +330,7 @@ class App extends Component {
             path='/create-account'
             component={UserRegistration}
           />
-          <Route
+          <PublicOnlyRoute
             exact
             path='/'
             component={Homepage}

@@ -14,7 +14,8 @@ class UserLogin extends Component {
         this.state = {
             userName: { value: '', touched: false },
             userPassword: { value: '', touched: false },
-            confirmPassword: { value: '', touched: false }
+            confirmPassword: { value: '', touched: false },
+            loginError: { value: '', status: false }
         };
     };
 
@@ -27,6 +28,15 @@ class UserLogin extends Component {
             password: this.state.userPassword.value,
         })
         .then(res => {
+            if(res.status === 400) {
+                this.setState({ 
+                    loginError: { 
+                        value: 'User Name or Password is incorrect.',
+                        status: true
+                    }
+                })
+            }
+            
             TokenService.saveAuthToken(res.authToken)
             const user = this.context.users.find(({ name }) => name === this.state.userName.value);
             this.context.setUser(user);
@@ -89,7 +99,7 @@ class UserLogin extends Component {
                             Password
                         </label>
                         <input
-                            type='text'
+                            type='password'
                             id='userPassword'
                             onChange={e => this.updatePassword(e.target.value)}
                             required
@@ -98,6 +108,12 @@ class UserLogin extends Component {
                             <ValidationError message={passwordError} />
                         )}
                     </section>
+                    <div className='userLogin_formCredError'>
+                        {this.state.loginError.status
+                            ? this.state.loginError.value
+                            : ''
+                        }
+                    </div>
                     <button 
                         type='submit'
                     >

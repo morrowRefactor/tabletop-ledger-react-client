@@ -281,7 +281,6 @@ class AddGame extends Component {
 
         // if user came from submitting a session, send them back to session submission form
         if(this.props.match.params.uid) {
-            const linkText = newGame.title.replace(/\s+/g, '-').toLowerCase();
             this.props.history.push(`/add-session/${this.props.match.params.uid}/new-game`)
         }
         else {

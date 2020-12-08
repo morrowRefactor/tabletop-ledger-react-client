@@ -22,3 +22,10 @@
     margin-bottom: 10px;
     width: 80%;
 }
+
+.sessionForm_removePlayerButton {
+    border: none;
+    background-color: white;
+    padding: 0px;
+    color: rgb(101, 101, 101);
+}

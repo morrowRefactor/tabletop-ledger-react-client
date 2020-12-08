@@ -29,7 +29,7 @@ class UserGameBlock extends Component {
                                 game_id: gameID
                             }
                         }}>
-                            Edit game
+                            Update game
                         </Link>
                 </div>
                 <Link to={gameLink}><h3>{this.props.title}</h3></Link>

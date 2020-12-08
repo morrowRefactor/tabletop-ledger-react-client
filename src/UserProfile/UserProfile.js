@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import UserGameBlock from '../UserGameBlock/UserGameBlock';
 import APIContext from '../APIContext';
-import APIHellpers from '../api-helpers';
 import './UserProfile.css';
 
 class UserProfile extends Component {
@@ -26,7 +25,10 @@ class UserProfile extends Component {
             this.context.getGameData();
             this.context.getUserData(parseInt(this.props.match.params.uid));
         }
-
+        else if(this.props.location.pathname.includes('new-session')) {
+            this.context.getUserData(parseInt(this.props.match.params.uid));
+            this.props.history.push(`/gamer/${this.props.match.params.uid}`);
+        }
         else {
             const thisUser = this.context.users.find(({id}) => id === parseInt(this.props.match.params.uid));
             user = thisUser;
@@ -124,7 +126,7 @@ class UserProfile extends Component {
                     <h3>Stats</h3>
                         <p>Total games sessions: {userSessions.sessions}</p>
                         <p>Total wins: {userSessions.wins}</p>
-                        <p>Win ratio: {(userSessions.wins / userSessions.sessions) * 100}%</p>
+                        <p>Win ratio: {((userSessions.wins / userSessions.sessions) * 100).toFixed(2)}%</p>
                 </section>
                 <section className='UserProfile_badges'>
                     <h3>Your Badges</h3>

@@ -22,9 +22,13 @@ class SessionForm extends Component {
             gameTitle: { value: '', touched: false },
             date: { value: '', touched: false },
             notes: { value: '', touched: false },
-            playerCount: { value: [ 1 ], touched: false },
-            playerCountWL: [ 1 ],
-            scores: []
+            playerCount: { value: [ ], touched: false },
+            playerCountWL: [ ],
+            scores: [],
+            gameType: '',
+            validatedPlayers: [],
+            validatedHostScore: {},
+            submitError: { value: '', status: false }
         };
     };
 
@@ -43,14 +47,31 @@ class SessionForm extends Component {
     };
     
     updateTitle = title => {
-        this.setState({
-            gameTitle: { value: title.value, touched: true },
-            gameID: title.id
-        });
+        if(this.state.submitError.status == true) {
+            this.setState({
+                submitError: { value: '', status: false },
+                gameTitle: { value: title.value, touched: true },
+                gameID: title.id
+            })
+        }
+        else {
+            this.setState({
+                gameTitle: { value: title.value, touched: true },
+                gameID: title.id
+            });
+        }
     };
 
     updateDate = date => {
-        this.setState({date: {value: date, touched: true }});
+        if(this.state.submitError.status == true) {
+            this.setState({
+                submitError: { value: '', status: false },
+                date: {value: date, touched: true }
+            })
+        }
+        else {
+            this.setState({date: {value: date, touched: true }});
+        }
     };
 
     updateNotes = note => {
@@ -90,7 +111,224 @@ class SessionForm extends Component {
         });
     };
 
+    removePlayer = player => {
+        if(player.includes('WL')) {
+            const currCount = this.state.playerCountWL;
+            const newPlayerCount = currCount.pop();
+            
+            this.setState({
+                playerCountWL: currCount
+            });
+        }
+        else {
+            const currCount = this.state.playerCount.value;
+            const newPlayerCount = currCount.pop();
+            
+            this.setState({
+                playerCount: {
+                    value: currCount,
+                    touched: true
+                }
+            });
+        }
+    }
+
+    setGameType = type => {
+        if(this.state.submitError.status == true) {
+            this.setState({
+                submitError: {
+                    value: '',
+                    status: false
+                },
+                gameType: type
+            });
+        }
+        else {
+            this.setState({
+                gameType: type
+            })
+        }
+    };
+    
+
     handleSubmit = () => {
+        //in case previous errors were corrected, clear error in state
+        if(this.state.submitError.status == true) {
+            this.setState({
+                submitError: {
+                    value: '',
+                    status: false
+                }
+            });
+        };
+
+        if(this.state.gameTitle.value.length < 1) {
+            this.setState({
+                submitError: {
+                    value: 'A game title is required',
+                    status: true
+                }
+            });
+        };
+
+        if(this.state.date.value.length < 1) {
+            this.setState({
+                submitError: {
+                    value: 'A session date is required',
+                    status: true
+                }
+            });
+        };
+
+        // player info needs to be validated prior to submission
+        if(this.state.gameType === 'scored') {
+            const hostNameCheck = document.getElementById('hostName');
+            if(!hostNameCheck || hostNameCheck.value.length < 1) {
+                this.setState({
+                    submitError: {
+                        value: 'A name is required for each submitted player',
+                        status: true
+                    }
+                });
+            }
+        };
+        
+        if(this.state.gameType === 'scored') {
+            const hostScoreCheck = document.getElementById('hostScore');
+            if(!hostScoreCheck || hostScoreCheck.value.length < 1) {
+                this.setState({
+                    submitError: {
+                        value: 'For scored sessions, a score value is required for each player',
+                        status: true
+                    }
+                });
+            }
+        };
+
+        if(this.state.gameType === 'win-loss') {
+            const hostNameCheck = document.getElementById('hostNameWL');
+            if(!hostNameCheck || hostNameCheck.value.length < 1) {
+                this.setState({
+                    submitError: {
+                        value: 'A name is required for each submitted player',
+                        status: true
+                    }
+                });
+            }
+        };
+
+        let newSessionScores = [];
+        let hostScore = {};
+        let winnerVal;
+
+        // check whether a scored or win/loss session was submitted
+        const gameType = document.getElementById('winLoss').value;
+        if(gameType === 'Yes' || gameType === 'No') {
+            if (gameType === 'Yes') {
+                winnerVal = true;
+            }
+            if (gameType === 'No') {
+                winnerVal = false;
+            }
+
+            hostScore = {
+                uid: parseInt(this.props.match.params.uid),
+                game_id: this.state.gameID,
+                name: document.getElementById('hostName').value,
+                winner: winnerVal
+            }
+        }
+        else {
+            hostScore = {
+                uid: parseInt(this.props.match.params.uid),
+                game_id: this.state.gameID,
+                name: document.getElementById('hostName').value,
+                score: parseInt(document.getElementById('hostScore').value),
+                winner: document.getElementById('hostWin').checked
+            };
+        }
+
+        let newArr = newSessionScores;
+        newArr.push(hostScore);
+        newSessionScores = newArr;
+
+        if(this.state.gameType === 'win-loss') {
+            if(this.state.playerCountWL.length > 0) {
+                for(let i = 0; i < this.state.playerCountWL.length; i++) {
+                    const id = this.state.playerCountWL[i];
+                    const playerName = document.getElementById(`playerIDWL[${id}]`);
+
+                    if(!playerName || playerName.value.length < 1) {
+                        this.setState({
+                            submitError: {
+                                value: 'A name is required for each submitted player',
+                                status: true
+                            }
+                        });
+                    }
+                    else {
+                        const newPlayer = {
+                            game_id: this.state.gameID,
+                            name: playerName.value,
+                            winner: winnerVal
+                        };
+                        let newArr = newSessionScores;
+                        newArr.push(newPlayer);
+                        newSessionScores = newArr;
+                    }
+                }
+            }
+        }
+        else {
+            if(this.state.gameType === 'scored' && this.state.playerCount.value.length > 0) {
+                for(let i = 0; i < this.state.playerCount.value.length; i++) {
+                    const id = this.state.playerCount.value[i];
+                    const playerName = document.getElementById(`playerID[${id}]`);
+                    const playerScore = document.getElementById(`scoreID[${id}]`);
+                    if(!playerName || playerName.value.length < 1) {
+                        this.setState({
+                            submitError: {
+                                value: 'A name is required for each submitted player',
+                                status: true
+                            }
+                        });
+                    }
+                    else if(!playerScore || playerScore.value.length < 1) {
+                        this.setState({
+                            submitError: {
+                                value: 'For scored sessions, a score value is required for each player',
+                                status: true
+                            }
+                        });
+                    }
+                    else {
+                        const playerWin = document.getElementById(`winnerID[${id}]`);
+                        const newPlayer = {
+                            game_id: this.state.gameID,
+                            name: playerName.value,
+                            score: parseInt(playerScore.value),
+                            winner: playerWin.checked
+                        };
+                        let newArr = newSessionScores;
+                        newArr.push(newPlayer);
+                        newSessionScores = newArr;
+                    }
+                }
+            }
+        }
+        
+        
+        if(this.state.submitError.status == false) {
+            this.setState({
+                validatedHostScore: hostScore,
+                validatedPlayers: newSessionScores
+            });
+
+            this.submitSession();
+        }
+    };
+
+    submitSession = () => {
         const newSession = {
             game_id: this.state.gameID,
             uid: this.state.hostID,
@@ -151,91 +389,22 @@ class SessionForm extends Component {
                     throw error
                 })
             }
-            return res.json()
+            
+            this.handleSessionPlayers(newSession);
         })
         .catch(error => {
             this.setState({ error })
         })
 
-        this.handleSessionPlayers(newSession);
+        
     };
 
     handleSessionPlayers = newSession => {
-        let newSessionScores = [];
-        let hostScore = {};
-        let winnerVal;
+        const newSessionScores = this.state.validatedPlayers;
+        newSessionScores.forEach(sess => {
+            sess.session_id = newSession.id
+        });
 
-        // check whether scored or win/loss session was submitted
-        const gameType = document.getElementById('winLoss').value;
-        if(gameType === 'Yes' || gameType === 'No') {
-            if (gameType === 'Yes') {
-                winnerVal = true;
-            }
-            if (gameType === 'No') {
-                winnerVal = false;
-            }
-
-            hostScore = {
-                uid: parseInt(this.props.match.params.uid),
-                session_id: newSession.id,
-                game_id: this.state.gameID,
-                name: document.getElementById('hostName').value,
-                winner: winnerVal
-            }
-        }
-        else {
-            hostScore = {
-                uid: parseInt(this.props.match.params.uid),
-                session_id: newSession.id,
-                game_id: this.state.gameID,
-                name: document.getElementById('hostName').value,
-                score: parseInt(document.getElementById('hostScore').value),
-                winner: document.getElementById('hostWin').checked
-            };
-        }
-
-        let newArr = newSessionScores;
-        newArr.push(hostScore);
-        newSessionScores = newArr;
-
-        if(gameType === 'Yes' || gameType === 'No') {
-            if(this.state.playerCountWL.length > 0) {
-                for(let i = 0; i < this.state.playerCountWL.length; i++) {
-                    const id = this.state.playerCountWL[i];
-                    const playerName = document.getElementById(`playerIDWL[${id}]`);
-                    const newPlayer = {
-                        session_id: newSession.id,
-                        game_id: this.state.gameID,
-                        name: playerName.value,
-                        winner: winnerVal
-                    };
-                    let newArr = newSessionScores;
-                    newArr.push(newPlayer);
-                    newSessionScores = newArr;
-                }
-            }
-        }
-        else {
-            if(this.state.playerCount.touched === true && this.state.playerCount.value.length > 0) {
-                for(let i = 0; i < this.state.playerCount.value.length; i++) {
-                    const id = this.state.playerCount[i];
-                    const playerName = document.getElementById(`playerID[${id}]`);
-                    const playerScore = document.getElementById(`scoreID[${id}]`);
-                    const playerWin = document.getElementById(`winnerID[${id}]`);
-                    const newPlayer = {
-                        session_id: newSession.id,
-                        game_id: this.state.gameID,
-                        name: playerName.value,
-                        score: parseInt(playerScore.value),
-                        winner: playerWin.checked
-                    };
-                    let newArr = newSessionScores;
-                    newArr.push(newPlayer);
-                    newSessionScores = newArr;
-                }
-            }
-        }
-        
         fetch(`${config.API_ENDPOINT}/api/session-scores`, {
             method: 'POST',
             body: JSON.stringify(newSessionScores),
@@ -250,13 +419,12 @@ class SessionForm extends Component {
                     throw error
                 })
             }
-            return res.json()
+            
+            this.handleHostStats(this.state.validatedHostScore);
         })
         .catch(error => {
             this.setState({ error })
-        })
-
-        this.handleHostStats(hostScore);
+        }) 
     }
 
     handleHostStats = hostScore => {
@@ -286,13 +454,13 @@ class SessionForm extends Component {
                     throw error
                 })
             }
-            return res.json()
+        })
+        .then(() => {
+            this.props.history.push(`/gamer/${this.props.match.params.uid}/new-session`)
         })
         .catch(error => {
             this.setState({ error })
-        })
-        
-        this.props.history.push(`/gamer/${this.props.match.params.uid}`);
+        })  
     }
 
     // update the user logs for sessions played by game category and mechanic
@@ -509,8 +677,7 @@ class SessionForm extends Component {
                 }
             })
         };
-    }
-    
+    };
 
     handleClickCancel = () => {
         this.props.history.push('/');
@@ -526,6 +693,8 @@ class SessionForm extends Component {
             <SessionPlayerForm
                 key={plyr}
                 id={plyr}
+                setGameType={this.setGameType}
+                removePlayer={this.removePlayer}
             />
         );
 
@@ -533,6 +702,8 @@ class SessionForm extends Component {
             <AddSessionPlayerForm
                 key={plyr}
                 id={plyr}
+                setGameType={this.setGameType}
+                removePlayer={this.removePlayer}
             />
         );
         
@@ -583,7 +754,6 @@ class SessionForm extends Component {
                             id='name'
                             placeholder='Gary exacts his revenge!'
                             onChange={e => this.updateName(e.target.value)}
-                            required
                         />
                     </section>
                     <section className='sessionForm_formField'>
@@ -642,6 +812,7 @@ class SessionForm extends Component {
                                 <input
                                     id='hostWin'
                                     type='checkbox'
+                                    onChange={() => this.setGameType('scored')}
                                 />
                             </div>
                             <div className='sessionForm_playerInfoFields'>
@@ -652,6 +823,7 @@ class SessionForm extends Component {
                                     type='text'
                                     id='hostName'
                                     defaultValue={user.name}
+                                    onChange={() => this.setGameType('scored')}
                                     required
                                 />
                                 <label htmlFor='sessionPlayerScore'>
@@ -661,6 +833,7 @@ class SessionForm extends Component {
                                     type='text'
                                     id='hostScore'
                                     placeholder='100'
+                                    onChange={() => this.setGameType('scored')}
                                     required
                                 />
                             </div>
@@ -680,6 +853,12 @@ class SessionForm extends Component {
                                 Cancel
                             </button>
                         </div>
+                        <div className='AddDestinationForm_credError'>
+                        {this.state.submitError.status
+                            ? this.state.submitError.value
+                            : ''
+                        }
+                        </div>
                     </section>
                     <h3 className='sessionForm_Header'>Win/Loss Sessions</h3>
                     <section className='sessionForm_winLoss'>
@@ -690,6 +869,7 @@ class SessionForm extends Component {
                             <select
                                 type='select'
                                 id='winLoss'
+                                onChange={() => this.setGameType('win-loss')}
                             >
                                 <option>Select</option>
                                 <option>Yes</option>
@@ -704,6 +884,7 @@ class SessionForm extends Component {
                                 type='text'
                                 id='hostNameWL'
                                 defaultValue={user.name}
+                                onChange={() => this.setGameType('win-loss')}
                                 required
                             />
                         </div>
@@ -721,6 +902,12 @@ class SessionForm extends Component {
                         <button type='button' onClick={e => this.handleClickCancel}>
                             Cancel
                         </button>
+                    </div>
+                    <div className='AddDestinationForm_credError'>
+                        {this.state.submitError.status
+                            ? this.state.submitError.value
+                            : ''
+                        }
                     </div>
                 </form>
             </section>

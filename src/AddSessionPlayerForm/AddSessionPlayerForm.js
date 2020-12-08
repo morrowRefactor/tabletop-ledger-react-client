@@ -17,8 +17,10 @@ class AddSessionPlayerForm extends Component {
                     type='text'
                     id={playerID}
                     placeholder='Jane Doe'
+                    onChange={() => this.props.setGameType('win-loss')}
                     required
                 />
+                <button className='sessionForm_removePlayerButton' onClick={() => this.props.removePlayer(playerID)}>Remove player</button>
             </section>
         );
     }

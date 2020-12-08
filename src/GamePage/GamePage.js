@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import APIContext from '../APIContext';
 import GameTip from '../GameTip/GameTip';
-import UserReccoBlock from '../UserReccoBlock/UserReccoBlock';
 import TokenService from '../services/token-service';
 import jwt_decode from 'jwt-decode';
 import config from '../config';
@@ -18,18 +17,13 @@ class GamePage extends Component {
     }
 
     addUserGame = gameId => {
+        const token = TokenService.getAuthToken();
+        const user = jwt_decode(token);
         let userGame = {
-            uid: this.context.thisUser.id,
+            uid: user.user_id,
             game_id: gameId
         };
 
-        // check whether a user is logged in, but dont populated in the api context
-        const token = TokenService.getAuthToken();
-        if(!this.context.thisUser.id && token.length > 20) {
-            const user = jwt_decode(token);
-            userGame.uid = user.user_id
-        }
-        
         fetch(`${config.API_ENDPOINT}/api/user-games`, {
             method: 'POST',
             body: JSON.stringify(userGame),
@@ -81,34 +75,6 @@ class GamePage extends Component {
         }
     }
 
-    renderGameReccos = () => {
-        let gameReccos = [];
-        for(let i = 0; i < this.context.userReccos.length; i++) {
-            if(this.context.userReccos[i].game_id === parseInt(this.props.match.params.game_id)) {
-                let newArr = gameReccos;
-                newArr.push(this.context.userReccos[i]);
-                gameReccos = newArr;
-            }
-        }
-
-        if(gameReccos.length > 0) {
-            return (
-                gameReccos.map(recco => 
-                    <UserReccoBlock
-                        key={recco.id}
-                        uid={recco.uid}
-                        recco={recco.recco_game_id}
-                        note={recco.note}
-                    />
-                )
-            );
-        }
-
-        else {
-            return 'No user recommendations for this game';
-        }
-    }
-
     renderAddGameButton = () => {
         const thisGame = this.context.games.find(({ id }) => id === parseInt(this.props.match.params.game_id));
         return (
@@ -149,8 +115,6 @@ class GamePage extends Component {
                 <p>{thisGame.description}</p>
                 <h2>Player Tips</h2>
                 {this.renderGameTips()}
-                <h2>Player Recommendations</h2>
-                {this.renderGameReccos()}
             </section>
         );
     }

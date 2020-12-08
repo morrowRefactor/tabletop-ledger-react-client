@@ -72,6 +72,11 @@ class UserRegistration extends Component {
         if (password.length === 0) {
           return 'Password must contain at least one capital letter, one number, and one special character';
         };
+
+        const regexPasswordCheck = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/;
+        if(!regexPasswordCheck.test(this.state.userPassword)) {
+            return 'Password must contain at least one capital letter, one number, and one special character';
+        }
     };
 
     render() {
@@ -104,7 +109,7 @@ class UserRegistration extends Component {
                             Password
                         </label>
                         <input
-                            type='text'
+                            type='password'
                             id='userPassword'
                             onChange={e => this.updatePassword(e.target.value)}
                             required
@@ -121,7 +126,6 @@ class UserRegistration extends Component {
                             type='textbox'
                             id='userInfo'
                             onChange={e => this.updateUserInfo(e.target.value)}
-                            required
                         />
                     </section>
                     <button 

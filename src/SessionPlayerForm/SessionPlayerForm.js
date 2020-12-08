@@ -19,6 +19,7 @@ class SessionPlayer extends Component {
                     <input
                         id={winnerID}
                         type='checkbox'
+                        onChange={() => this.props.setGameType('scored')}
                     />
                 </div>
                 <div className='sessionForm_sessionPlayerInfoFields'>
@@ -29,6 +30,7 @@ class SessionPlayer extends Component {
                         type='text'
                         id={playerID}
                         placeholder='Jane Doe'
+                        onChange={() => this.props.setGameType('scored')}
                         required
                     />
                     <label htmlFor='sessionPlayerScore'>
@@ -38,8 +40,10 @@ class SessionPlayer extends Component {
                         type='text'
                         id={scoreID}
                         placeholder='100'
+                        onChange={() => this.props.setGameType('scored')}
                         required
                     />
+                    <button className='sessionForm_removePlayerButton' onClick={() => this.props.removePlayer(playerID)}>Remove player</button>
                 </div>
             </section>
         );

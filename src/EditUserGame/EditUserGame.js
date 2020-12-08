@@ -56,7 +56,7 @@ class EditUserGame extends Component {
 
         if(this.state.ownsGame.touched === true && this.state.ownsGame.value !== this.state.currentVals.own) {
             let ownVal;
-            if(this.state.ownsGame.value === "on") {
+            if(this.state.ownsGame.value === "Yes") {
                 ownVal = true;
             }
             else { ownVal = false }
@@ -105,8 +105,12 @@ class EditUserGame extends Component {
     };
 
     render() {
+        const thisGame = this.context.games.find(({ id }) => id === parseInt(this.props.match.params.game_id));
+
         return (
             <section className='EditUserGame'>
+                <h2>Update this game in your collection</h2>
+                <h3>{thisGame.title}</h3>
                 <form 
                     className='EditUserGame_form'
                     onSubmit={this.handleSubmit}
@@ -125,11 +129,15 @@ class EditUserGame extends Component {
                     <label htmlFor='ownGame'>
                         Do you own this game?
                     </label>
-                    <input
+                    <select
                         id='ownGame'
-                        type='checkbox'
+                        type='select'
                         onChange={e => this.updateOwnGame(e.target.value)}
-                    />
+                    >
+                        <option>Select</option>
+                        <option>Yes</option>
+                        <option>No</option>
+                    </select>
                     <label htmlFor='gameNotes'>
                         Game notes
                     </label>
@@ -139,9 +147,11 @@ class EditUserGame extends Component {
                         placeholder='ex: One of my favorites!'
                         onChange={e => this.updateNotes(e.target.value)}
                     />
-                    <button type='submit'>
-                        Submit
-                    </button>
+                    <div>
+                        <button type='submit'>
+                            Submit
+                        </button>
+                    </div>
                 </form>
             </section>
         );
