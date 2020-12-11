@@ -1,3 +1,7 @@
+.UserRegistration_logo {
+    display: none;
+}
+
 .UserRegistration_form {
     width: 50%;
     margin-left: auto;
@@ -17,4 +21,27 @@
 
 #userInfo {
     height: 50px;
+}
+
+@media (min-width: 800px) {
+    .UserRegistration {
+        display: flex;
+        flex-direction: row;
+        width: 50%;
+        margin: 50px auto 20px auto;
+    }
+
+    .UserRegistration_logo {
+        display: inline-block;
+        width: 30%;
+        padding-top: 10vh;
+    }
+
+    .userRegistration_logoImage {
+        width: 10vw;
+    }
+
+    .UserRegistration_form {
+        margin-left: 0px;
+    }
 }

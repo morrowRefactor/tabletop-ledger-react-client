@@ -1,0 +1,59 @@
+.GamePageMain_search {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    border-top: 2px solid rgb(210, 210, 210);
+    border-bottom: 2px solid rgb(210, 210, 210);
+}
+
+.gamePageMain_searchLogo {
+    display: none;
+}
+
+.gameTitle {
+    display: inline-block;
+    width: 100%;
+}
+
+.css-2b097c-container {
+    width: 80%;
+}
+
+.gamePageMain_formButtons {
+    display: inline-block;
+    width: 100%;
+}
+
+@media (min-width: 800px) {
+    .GamePageMain {
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .GamePageMain_search {
+        display: flex;
+        flex-direction: row;
+        width: 80%;
+        text-align: left;
+    }
+    
+    .gamePageMain_searchLogo {
+        display: inline-block;
+        text-align: center;
+        width: 40%;
+        margin-top: 4vh;
+    }
+
+    .gamePageMain_logoImage {
+        width: 10vw;
+    }
+
+    .GamePageMain_form {
+        width: 60%;
+    }
+
+    .css-2b097c-container {
+        width: 60%;
+    }
+}

@@ -10,6 +10,7 @@
     direction: rtl;
     margin-bottom: 25px;
     border-bottom: 1.5px solid rgb(16, 60, 16);
+    background-color: rgb(16, 60, 16);
     box-shadow: 0px 4px rgb(0,0,0,0.15);
 }
 
@@ -19,7 +20,7 @@
 
 .topNavHeaderLink {
     font-size: 18px;
-    color: rgb(16, 60, 16);
+    color:white;
     font-weight: bold;
     text-decoration: none;
 }
@@ -46,7 +47,7 @@
 
 .menulink {
     text-decoration: none;
-    color: rgb(16, 60, 16);
+    color:white;
 }
   
 .hamburger {
@@ -68,7 +69,12 @@
 .show {
     margin-right: 0px;
     margin-left: auto;
-    transition-timing-function: ease;
+}
+
+.show > li {
+    display: inline-block;
+    width: 100%;
+    text-align: right;
 }
 
 .hidden {
@@ -82,8 +88,8 @@
 
 .hamburgerButton,
 .topNavLink {
-    background-color: white;
-    color: rgb(16, 60, 16);
+    background-color: rgb(16, 60, 16);
+    color: white;
     border: none;
     text-decoration: none;
     font-size: .90em;
@@ -96,8 +102,8 @@ button:hover,
 
 @media (min-width: 900px) {
     .TopNav {
-        background-color: white;
-        border-bottom: solid 2px rgb(16, 60, 16);
+        background-color: rgb(16, 60, 16);
+        border-bottom: solid 2px white;
         padding: auto 20px auto 20px;
     }
 
@@ -112,7 +118,7 @@ button:hover,
     .topNavHeaderLink {
         font-size: 22px;
         font-weight: bold;
-        color: rgb(16, 60, 16);
+        color: white;
     }
 
     .hamburger,
@@ -131,7 +137,7 @@ button:hover,
 
     .topNavLink {
         font-size: 18px;
-        background-color: white;
-        color: rgb(16, 60, 16);
+        background-color: rgb(16, 60, 16);
+        color: white;
     }
 }

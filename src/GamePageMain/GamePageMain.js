@@ -43,6 +43,7 @@ class GamePageMain extends Component {
             return (
                 <GameBlock
                     key={gameResult.id}
+                    id={gameResult.id}
                     title={gameResult.title}
                     description={gameResult.description}
                     image={gameResult.image}
@@ -111,28 +112,39 @@ class GamePageMain extends Component {
         return (
             <section className='GamePageMain'>
                 <h1>Games</h1>
-                <form 
-                    className='SessionForm_form'
-                >
-                    <label htmlFor='gameTitle'>
-                        Game title
-                    </label>
-                    <Select
-                        id='gameTitle'
-                        className='gameTitleOption'
-                        options={gameList}
-                        onChange={e => this.updateTitle(e)} 
-                        value={gameList.filter(obj => obj.value === this.state.gameTitle.value)}
-                        required
-                    />
-                    <button 
-                        type='button'
-                        onClick={e => this.handleSubmit()}
-                    >
-                        Search
-                    </button>
-                </form>
-                <p>Don't see a game you're looking for? <Link to='/add-games'>Add it!</Link></p>
+                <section className='GamePageMain_search'>
+                    <div className='gamePageMain_searchLogo'> 
+                        <img className='gamePageMain_logoImage' alt='Tabletop Ledger Logo' src='https://user-images.githubusercontent.com/58446465/101688934-913da480-3a21-11eb-9e36-6da84e4cea0e.png' />
+                    </div>
+                    <section className='GamePageMain_form'>
+                        <form>
+                            <h3>Find a game</h3>
+                            <label 
+                                htmlFor='gameTitle'
+                                className='gameTitle'
+                            >
+                                Game title
+                            </label>
+                            <Select
+                                id='gameTitle'
+                                className='gameTitleOption'
+                                options={gameList}
+                                onChange={e => this.updateTitle(e)} 
+                                value={gameList.filter(obj => obj.value === this.state.gameTitle.value)}
+                                required
+                            />
+                            <div className='gamePageMain_formButtons'>
+                                <button 
+                                    type='button'
+                                    onClick={e => this.handleSubmit()}
+                                >
+                                    Search
+                                </button>
+                            </div>
+                        </form>
+                        <p>Don't see a game you're looking for?<br/><Link to='/add-games'>Add it!</Link></p>
+                    </section>
+                </section>
                 {this.renderSearchedGame()}
                 <h2>Most Played on TableTop Ledger</h2>
                 {this.renderMostPlayed()}

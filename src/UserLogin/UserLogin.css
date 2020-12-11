@@ -1,3 +1,7 @@
+.UserLogin_logo {
+    display: none;
+}
+
 .UserLogin_form {
     width: 50%;
     margin-left: auto;
@@ -19,4 +23,27 @@
     font-size: 12px;
     color: red;
     margin-bottom: 10px;
+}
+
+@media (min-width: 800px) {
+    .UserLogin {
+        display: flex;
+        flex-direction: row;
+        width: 50%;
+        margin: 50px auto 20px auto;
+    }
+
+    .UserLogin_logo {
+        display: inline-block;
+        width: 30%;
+        padding-top: 5vh;
+    }
+
+    .userLogin_logoImage {
+        width: 10vw;
+    }
+
+    .UserLogin_form {
+        margin-left: 0px;
+    }
 }

@@ -4,7 +4,11 @@
     margin-right: auto;
 }
 
-h3,
+.userGameImage {
+    width: 90%;
+}
+
+.EditUserGame > h3,
 .EditUserGame_form {
     text-align: left;
     margin-left: 5%;
@@ -18,4 +22,24 @@ h3,
 .EditUserGame_form > input,
 .EditUserGame_form > select {
     margin-bottom: 20px;
+}
+
+@media (min-width: 900px) {
+    .EditUserGame {
+        width: 70%;
+    }
+
+    .EditUserGame_mainBody {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .EditUserGame_image {
+        width: 30%;
+        margin-left: 30%;
+    }
+
+    .userGameImage {
+        width: 90%;
+    }
 }

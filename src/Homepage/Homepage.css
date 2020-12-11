@@ -6,8 +6,8 @@
 
 .Homepage_overview {
     width: 80%;
-    border-top: 1px solid gray;
-    border-bottom: 1px solid gray;
+    border-top: 1px solid rgb(210, 210, 210);
+    border-bottom: 1px solid rgb(210, 210, 210);
     margin: 0px auto 20px auto;
 }
 
@@ -16,9 +16,103 @@
 }
 
 .homepage_featuresBox {
-    border: 1px solid gray;
+    border: 1px solid rgb(210, 210, 210);
     border-radius: 3px;
     width: 90%;
     margin: 0px auto 20px auto;
     padding: 10px;
+    text-align: center;
+}
+
+.homepage_featureImage {
+    width: 70%;
+}
+
+.homepage_getStarted {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin: 0px auto 20px auto;
+    border: none;
+}
+
+.homepage_getStartedLogo {
+    width: 40%;
+}
+
+.homepage_featureImageLogo {
+    width: 70%;
+    margin-top: 30%;
+}
+
+.homepage_getStartedText {
+    width: 60%;
+    text-align: left;
+}
+
+.homepage_getStartedHeader {
+    margin-top: 0px;
+}
+
+@media (min-width: 400px) {
+    .homepage_getStartedLogo {
+        width: 30%;
+    }
+
+    .homepage_featureImageLogo {
+        margin-top: 10px;
+    }
+}
+
+@media (min-width: 800px) {
+    .Homepage_overview {
+        width: 70%;
+    }
+
+    .Homepage > h1 {
+        font-size: 36px;
+    }
+
+    .homepageSubTitle {
+        font-size: 24px;
+    }
+
+    .homepageAbout {
+        font-size: 20px;
+    }
+
+    .Homepage_features {
+        display: flex;
+        flex-direction: row;
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .homepage_featuresBox {
+        width: 40%;
+        border: 5px solid rgb(210, 210, 210);
+        border-radius: 10px;
+    }
+
+    .homepage_getStarted {
+        width: 60%;
+        border-top: 1px solid rgb(210, 210, 210);
+        border-bottom: 1px solid rgb(210, 210, 210);
+    }
+
+    .homepage_getStartedLogo {
+        width: 40%;
+    }
+
+    .homepage_featureImageLogo {
+        width: 40%;
+        margin-top: 10px;
+        margin-left: 20%;
+    }
+
+    .homepage_getStartedText {
+        text-align: left;
+        padding: 10px;
+    }
 }

@@ -1,0 +1,15 @@
+.GameTip {
+    text-align: left;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: rgb(230, 230, 230);
+}
+
+.gameTiptext,
+.gameTipPlayerName {
+    margin: 0px;
+}
+
+.gameTipPlayerName {
+    font-size: 12px;
+}

@@ -1,4 +1,31 @@
+.addGame_logo {
+    display: none;
+}
+
+.AddGame_form {
+    text-align: left;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.AddGame_formBlock > p {
+    text-align: left;
+    margin-left: 5%;
+}
+ 
 .AddGame_form > label {
+    display: inline-block;
+    width: 100%;
+}
+
+.AddGame_form > input {
+    width: 30%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.addGame_formButtons {
     display: inline-block;
     width: 100%;
 }
@@ -11,4 +38,31 @@
 
 .AddGame_searchResults {
     text-align: left;
+}
+
+@media (min-width: 768px) {
+    .AddGame {
+        width: 60%;
+        margin: 0px auto 50px auto;
+    }
+
+    .AddGame_headerBlock {
+        display: flex;
+        flex-direction: row;
+        margin-top: 50px;
+    }
+
+    .addGame_logo {
+        display: inline-block;
+        width: 33%;
+    }
+
+    .addGame_logoImage {
+        width: 50%;
+        margin-top: 20px;
+    }
+
+    .AddGame_searchResults {
+        width: 75%;
+    }
 }

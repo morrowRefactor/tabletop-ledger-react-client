@@ -106,15 +106,17 @@ class GamePage extends Component {
             <section className='GamePage'>
                 <h1>{thisGame.title}</h1>
                 <img className='gamePageImage' src={thisGame.image} alt={thisGame.title} />
-                {TokenService.hasAuthToken()
-                    ? this.renderAddGameButton()
-                    : ''
-                }
-                <p>Total sessions logged on TTL: {gamePlays}</p>
-                <p>BGG Rating: {thisGame.bgg_rating}</p>
-                <p>{thisGame.description}</p>
-                <h2>Player Tips</h2>
-                {this.renderGameTips()}
+                <section className='GamePage_gameInfo'>
+                    {TokenService.hasAuthToken()
+                        ? this.renderAddGameButton()
+                        : ''
+                    }
+                    <p className='gamePagePlayCount'>TTL Sessions Logged: {gamePlays}</p>
+                    <p className='gamePageRating'>BGG Rating: {thisGame.bgg_rating}</p>
+                    <p>{thisGame.description}</p>
+                    <h2>Player Tips</h2>
+                    {this.renderGameTips()}
+                </section>
             </section>
         );
     }

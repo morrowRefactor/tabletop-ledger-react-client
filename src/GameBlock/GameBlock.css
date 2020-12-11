@@ -1,6 +1,6 @@
 .GameBlock {
     width: 95%;
-    border: 1px solid gray;
+    border: 1px solid rgb(210, 210, 210);
     border-radius: 3px;
     margin: 10px auto 10px auto;
     padding: 10px;
@@ -17,4 +17,25 @@
 .gameBlockRating {
     font-size: 14px;
     margin-top: 0px;
+}
+
+.gameBlockPlayCount {
+    margin: 0px auto 0px auto;
+}
+
+@media (min-width: 800px) {
+    .GameBlock {
+        width: 80%;
+        padding: 20px;
+    }
+
+    .gameBlockImage {
+        width: 50%;
+    }
+
+    .gameBlockDesc {
+        width: 70%;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }

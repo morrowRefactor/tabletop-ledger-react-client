@@ -7,3 +7,32 @@
 .gamePageImage {
     width: 70%;
 }
+
+.gamePagePlayCount {
+    margin-bottom: 0px;
+}
+
+.gamePageRating {
+    margin-top: 0px;
+}
+
+@media (min-width: 800px) {
+    .GamePage {
+        width: 70%;
+        margin-bottom: 50px;
+    }
+
+    .GamePage > h1 {
+        font-size: 38px;
+    }
+
+    .gamePageImage {
+        width: 50%;
+    }
+
+    .GamePage_gameInfo {
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}

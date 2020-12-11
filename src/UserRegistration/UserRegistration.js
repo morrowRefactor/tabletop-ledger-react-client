@@ -85,6 +85,9 @@ class UserRegistration extends Component {
         
         return (
             <section className='UserRegistration'>
+                <div className='UserRegistration_logo'>
+                    <img className='userRegistration_logoImage' alt='Tabletop Ledger Logo' src='https://user-images.githubusercontent.com/58446465/101688934-913da480-3a21-11eb-9e36-6da84e4cea0e.png' />
+               </div>
                <form 
                     className='UserRegistration_form'
                     onSubmit={this.handleSubmitJwtAuth}

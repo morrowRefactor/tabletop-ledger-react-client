@@ -379,32 +379,41 @@ class AddGame extends Component {
 
         return (
             <section className='AddGame'>
-                <h1>Add a New Game</h1>
-                <p>First, search for the game you want to add.</p>
-                <form 
-                    className='AddGame_form'
-                    onSubmit={this.handleSubmit}
-                >
-                    <label htmlFor='gameTitle'>
-                        Game title
-                    </label>
-                    <input
-                        type='text'
-                        id='gameTitle'
-                        placeholder='ex: Terraforming Mars'
-                        onChange={e => this.updateTitle(e.target.value)}
-                        required
-                    />
-                    {this.state.searchTitle.touched && (
-                        <ValidationError message={titleError} />
-                    )}
-                    {this.state.duplicateGame.status && (
-                        <ValidationError message={dupeError} />
-                    )}
-                    <button type='submit'>
-                        Search
-                    </button>
-                </form>
+                <section className='AddGame_headerBlock'>
+                    <div className='addGame_logo'>
+                        <img className='addGame_logoImage' alt='Tabletop Ledger Logo' src='https://user-images.githubusercontent.com/58446465/101688934-913da480-3a21-11eb-9e36-6da84e4cea0e.png' />
+                    </div>
+                    <section className='AddGame_formBlock'>
+                        <h1>Add a New Game</h1>
+                        <p>First, search for the game you want to add.</p>
+                        <form 
+                            className='AddGame_form'
+                            onSubmit={this.handleSubmit}
+                        >
+                            <label htmlFor='gameTitle'>
+                                Game title
+                            </label>
+                            <input
+                                type='text'
+                                id='gameTitle'
+                                placeholder='ex: Terraforming Mars'
+                                onChange={e => this.updateTitle(e.target.value)}
+                                required
+                            />
+                            {this.state.searchTitle.touched && (
+                                <ValidationError message={titleError} />
+                            )}
+                            {this.state.duplicateGame.status && (
+                                <ValidationError message={dupeError} />
+                            )}
+                            <div className='addGame_formButtons'>
+                                <button type='submit'>
+                                    Search
+                                </button>
+                            </div>
+                        </form>
+                    </section>
+                </section>
                 <section className='AddGame_selectedGame'>
                     {this.renderSelectedGame()}
                 </section>

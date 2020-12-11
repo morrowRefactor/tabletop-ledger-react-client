@@ -2,6 +2,14 @@
     padding: 20px 10px 10px 10px;
 }
 
+.addSelectedGameRating {
+    margin-top: 0px;
+}
+ 
+.AddSelectedGame > h3 {
+    margin-bottom: 0px;
+}
+
 .addSelectedGameImage {
     width: 70%;
 }
@@ -9,8 +17,14 @@
 .AddSelectedGame_confirm {
     border-top: 1px solid gray;
     border-bottom: 1px solid gray;
-    background-color: rgb(189, 189, 189);
+    background-color: rgb(210, 210, 210);
     margin-left: auto;
     margin-right: auto;
     padding: 0px 5px 0px 5px;
+}
+
+@media (min-width: 768px) {
+    .addSelectedGameImage {
+        width: 50%;
+    }
 }

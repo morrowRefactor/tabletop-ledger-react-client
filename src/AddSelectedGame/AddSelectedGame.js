@@ -17,7 +17,7 @@ class AddSelectedGame extends Component {
             <section className='AddSelectedGame'>
                 <img className='addSelectedGameImage' src={this.props.image} alt={this.props.title} />
                 <h3>{this.props.title} ({this.props.yearPub})</h3>
-                <p>BGG Rating: {rating}</p>
+                <p className='addSelectedGameRating'>BGG Rating: {rating}</p>
                 <p>{this.truncate(this.props.desc)}</p>
                 <section className='AddSelectedGame_confirm'>
                     <p>Is this the game you're looking to add?</p>

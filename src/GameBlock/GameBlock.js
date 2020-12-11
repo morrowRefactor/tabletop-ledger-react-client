@@ -12,7 +12,7 @@ class GameBlock extends Component {
 
     renderPlays = () => {
         if(this.props.playCount) {
-            return <p>Play Count: {this.props.playCount}</p>;
+            return <p className='gameBlockPlayCount'>TTL Sessions Logged: {this.props.playCount}</p>;
         };
     };
 
@@ -26,7 +26,7 @@ class GameBlock extends Component {
                 <h3><Link to={link}>{this.props.title}</Link></h3>
                 {this.renderPlays()}
                 <p className='gameBlockRating'>BGG Rating: {this.props.bggRating}</p>
-                <p>{this.truncate(this.props.description)}</p>
+                <p className='gameBlockDesc'>{this.truncate(this.props.description)}</p>
             </section>
         );
     }

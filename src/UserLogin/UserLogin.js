@@ -75,6 +75,9 @@ class UserLogin extends Component {
         
         return (
             <section className='UserLogin'>
+               <div className='UserLogin_logo'>
+                    <img className='userLogin_logoImage' alt='Tabletop Ledger Logo' src='https://user-images.githubusercontent.com/58446465/101688934-913da480-3a21-11eb-9e36-6da84e4cea0e.png' />
+               </div>
                <form 
                     className='UserLogin_form'
                     onSubmit={this.handleSubmitJwtAuth}

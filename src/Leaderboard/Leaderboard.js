@@ -69,7 +69,7 @@ class Leaderboard extends Component {
 
         return (
             <section className='Leaderboard'>
-                <h1>Leaderboard</h1>
+                <h1>Leaderboards</h1>
                 <h3>Highest Win Ratio</h3>
                 {renderWinRatio}
                 <h3>Most Wins</h3>

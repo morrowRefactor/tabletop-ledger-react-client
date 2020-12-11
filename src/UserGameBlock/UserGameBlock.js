@@ -32,15 +32,21 @@ class UserGameBlock extends Component {
                             Update game
                         </Link>
                 </div>
-                <Link to={gameLink}><h3>{this.props.title}</h3></Link>
+                <Link to={gameLink}><h3 className='userBoardGame_title'>{this.props.title}</h3></Link>
                 <div className='userBoardGameRatings'>
-                    <p>Your rating: {userGameSpecs[0].rating}</p>
+                    <p>Your rating: {!userGameSpecs[0].rating
+                        ? 'NA'
+                        : userGameSpecs[0].rating
+                    }</p>
                     <p>BGG rating: {this.props.bggRating}</p>
                     <p>Your sessions: {this.props.playCount}</p>
                 </div>
                 <p>{this.props.info}</p>
                 <p className='userBoardGameNotesHeader'>Your notes:</p>
-                <p>{userGameSpecs[0].notes}</p>
+                <p>{!userGameSpecs[0].notes
+                    ? 'None yet'
+                    : userGameSpecs[0].notes
+                }</p>
             </section>
         );
     }

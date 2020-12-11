@@ -10,8 +10,8 @@ class GameTip extends Component {
 
         return (
             <section className='GameTip'>
-                <p>{user.name}</p>
-                <p>{this.props.tip}</p>
+                <p className='gameTiptext'>{this.props.tip}</p>
+                <p className='gameTipPlayerName'>{user.name}</p>
             </section>
         );
     }

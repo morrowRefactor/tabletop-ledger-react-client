@@ -1,22 +1,87 @@
-.UserProfile_stats > h3,
-.UserProfile_badges > h3,
-.UserProfile_games > h2 {
+.userProfile_logoImage {
+    width: 30%;
+}
+
+.UserProfile_mainBody > section {
+    margin-bottom: 40px;
+}
+
+.UserProfile_mainBody > h3 {
     width: 80%;
-    border-bottom: 1px solid gray;
+    border-bottom: 1px solid rgb(210, 210, 210);
     margin: 20px auto 0px auto;
 }
 
-.UserProfile_stats > p,
-.UserProfile_badges > p {
+.UserProfile_badges > h3,
+.UserProfile_stats > h3 {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    border-bottom: 1px solid rgb(210, 210, 210);
+}
+
+.UserProfile_userInfo > h1 {
+    font-size: 20px;
+    margin-bottom: 0px;
+}
+
+.UserProfile_games > h2 {
+    border-bottom: 3px solid rgb(210, 210, 210);
+}
+
+.UserProfile_mainBody > p {
     line-height: 1em;
     margin: 10px auto 10px auto;
 }
 
 .userProfile_badgesHeader {
     font-weight: bold;
-    margin-top: 10px;
 }
 
 .UserProfile_games {
     margin: 30px auto 20px auto;
+}
+
+@media (min-width: 900px) {
+    .UserProfile {
+        width: 70%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .UserProfile_mainBody {
+        display: flex;
+        flex-direction: row;
+        width: 70%;
+        margin: 50px auto 20px auto;
+    }
+
+    .UserProfile_badges,
+    .UserProfile_stats {
+        width: 40%;
+        text-align: left;
+    }
+
+    .UserProfile_badges > h3,
+    .UserProfile_stats > h3 {
+        margin-left: 0px;
+    }
+
+    .UserProfile_stats {
+        padding-left: 80px;
+    }
+
+    .userProfile_logoImage {
+        width: 8vw;
+    }
+
+    .UserProfile_userInfo > h1,
+    .UserProfile_userInfo > h3 {
+        font-size: 26px;
+        margin-bottom: 0px;
+    }
+
+    .UserProfile_userInfo > p {
+        margin: 0px auto 0px auto;
+    }
 }

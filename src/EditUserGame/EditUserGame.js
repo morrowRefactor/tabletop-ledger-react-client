@@ -110,49 +110,54 @@ class EditUserGame extends Component {
         return (
             <section className='EditUserGame'>
                 <h2>Update this game in your collection</h2>
-                <h3>{thisGame.title}</h3>
-                <form 
-                    className='EditUserGame_form'
-                    onSubmit={this.handleSubmit}
-                >
-                    <label htmlFor='userRating'>
-                        Your rating
-                    </label>
-                    <input
-                        type='number'
-                        id='userRating'
-                        min="0"
-                        max="10"
-                        step="0.1"
-                        onChange={e => this.updateRating(e.target.value)}
-                    />
-                    <label htmlFor='ownGame'>
-                        Do you own this game?
-                    </label>
-                    <select
-                        id='ownGame'
-                        type='select'
-                        onChange={e => this.updateOwnGame(e.target.value)}
-                    >
-                        <option>Select</option>
-                        <option>Yes</option>
-                        <option>No</option>
-                    </select>
-                    <label htmlFor='gameNotes'>
-                        Game notes
-                    </label>
-                    <input
-                        type='textbox'
-                        id='gameNotes'
-                        placeholder='ex: One of my favorites!'
-                        onChange={e => this.updateNotes(e.target.value)}
-                    />
-                    <div>
-                        <button type='submit'>
-                            Submit
-                        </button>
+                <section className='EditUserGame_mainBody'>
+                    <div className='EditUserGame_image'>
+                        <img className='userGameImage' alt={thisGame.title} src={thisGame.image} />
+                        <h3>{thisGame.title}</h3>
                     </div>
-                </form>
+                    <form 
+                        className='EditUserGame_form'
+                        onSubmit={this.handleSubmit}
+                    >
+                        <label htmlFor='userRating'>
+                            Your rating
+                        </label>
+                        <input
+                            type='number'
+                            id='userRating'
+                            min="0"
+                            max="10"
+                            step="0.1"
+                            onChange={e => this.updateRating(e.target.value)}
+                        />
+                        <label htmlFor='ownGame'>
+                            Do you own this game?
+                        </label>
+                        <select
+                            id='ownGame'
+                            type='select'
+                            onChange={e => this.updateOwnGame(e.target.value)}
+                        >
+                            <option>Select</option>
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
+                        <label htmlFor='gameNotes'>
+                            Game notes
+                        </label>
+                        <input
+                            type='textbox'
+                            id='gameNotes'
+                            placeholder='ex: One of my favorites!'
+                            onChange={e => this.updateNotes(e.target.value)}
+                        />
+                        <div>
+                            <button type='submit'>
+                                Submit
+                            </button>
+                        </div>
+                    </form>     
+                </section>
             </section>
         );
     }
