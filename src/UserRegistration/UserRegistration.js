@@ -16,7 +16,9 @@ class UserRegistration extends Component {
             userName: { value: '', touched: false },
             userInfo: { value: '', touched: false },
             userPassword: { value: '', touched: false },
-            confirmPassword: { value: '', touched: false }
+            confirmPassword: { value: '', touched: false },
+            passwordError: { value: '', status: false },
+            passConfirmError: { value: '', status: false }
         };
     };
 
@@ -27,25 +29,42 @@ class UserRegistration extends Component {
         );
     }
 
-    handleSubmitJwtAuth = ev => {
-        ev.preventDefault()
-        this.setState({ error: null })
+    handleSubmitJwtAuth = e => {
+        e.preventDefault();
         
-        AuthApiService.postUser({
-            name: this.state.userName.value,
-            about: this.state.userInfo.value,
-            password: this.state.userPassword.value,
-            joined_date: new Date()
-        })
-        .then(res => {
-            TokenService.saveAuthToken(res.authToken);
-            APIHelpers.postNewUserStandings(res.id);
-            this.context.setUser(res);
-            this.props.history.push(`/`);
-        })
-        .catch(res => {
-            this.setState({ error: res.error })
-        })
+        // validate that password has required characters
+        const regexPasswordCheck = /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/;
+        if(!regexPasswordCheck.test(this.state.userPassword.value)) {
+            this.setState({
+                passwordError: { 
+                    value: 'Password must contain at least one capital letter, one number, one special character, and be at least 8 characters long'},
+                    status: true
+            });
+        }
+        if(this.state.userPassword.value !== this.state.confirmPassword.value) {
+            this.setState({
+                passConfirmError: { 
+                    value: 'Passwords must be an identical character match'},
+                    status: true
+            });
+        }
+        else {
+            AuthApiService.postUser({
+                name: this.state.userName.value,
+                about: this.state.userInfo.value,
+                password: this.state.userPassword.value,
+                joined_date: new Date()
+            })
+            .then(res => {
+                TokenService.saveAuthToken(res.authToken);
+                APIHelpers.postNewUserStandings(res.id);
+                this.context.setUser(res);
+                this.props.history.push(`/`);
+            })
+            .catch(res => {
+                this.setState({ error: res.error })
+            })
+        }
     }
 
     updateUserName = name => {
@@ -57,7 +76,27 @@ class UserRegistration extends Component {
     };
 
     updatePassword = password => {
-        this.setState({userPassword: {value: password, touched: true}});
+        if(this.state.passwordError.value) {
+            this.setState({
+                userPassword: {value: password, touched: true},
+                passwordError: { value: '', status: false }
+            })
+        }
+        else {
+            this.setState({userPassword: {value: password, touched: true}});
+        }  
+    };
+
+    confirmPassword = password => {
+        if(this.state.passConfirmError.value) {
+            this.setState({
+                confirmPassword: { value: password, touched: true },
+                passConfirmError: { value: '', status: false }
+            })
+        }
+        else {
+            this.setState({confirmPassword: {value: password, touched: true}});
+        }   
     };
 
     validateUserName = () => {
@@ -72,11 +111,6 @@ class UserRegistration extends Component {
         if (password.length === 0) {
           return 'Password must contain at least one capital letter, one number, and one special character';
         };
-
-        const regexPasswordCheck = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/;
-        if(!regexPasswordCheck.test(this.state.userPassword)) {
-            return 'Password must contain at least one capital letter, one number, and one special character';
-        }
     };
 
     render() {
@@ -108,6 +142,16 @@ class UserRegistration extends Component {
                         )}
                     </section>
                     <section className='userRegistration_formFields'>
+                        <label htmlFor='userInfo'>
+                            About
+                        </label>
+                        <input
+                            type='textbox'
+                            id='userInfo'
+                            onChange={e => this.updateUserInfo(e.target.value)}
+                        />
+                    </section>
+                    <section className='userRegistration_formFields'>
                         <label htmlFor='userPassword'>
                             Password
                         </label>
@@ -117,19 +161,28 @@ class UserRegistration extends Component {
                             onChange={e => this.updatePassword(e.target.value)}
                             required
                         />
+                        {this.state.passwordError.value
+                            ? <div className='passwordError'>{this.state.passwordError.value}</div>
+                            : ''
+                        }
                         {this.state.userPassword.touched && (
                             <ValidationError message={passwordError} />
                         )}
                     </section>
                     <section className='userRegistration_formFields'>
-                        <label htmlFor='userInfo'>
-                            About
+                        <label htmlFor='confirmPassword'>
+                            Confirm Password
                         </label>
                         <input
-                            type='textbox'
-                            id='userInfo'
-                            onChange={e => this.updateUserInfo(e.target.value)}
+                            type='password'
+                            id='confirmPassword'
+                            onChange={e => this.confirmPassword(e.target.value)}
+                            required
                         />
+                        {this.state.passConfirmError.value
+                            ? <div className='passwordError'>{this.state.passConfirmError.value}</div>
+                            : ''
+                        }
                     </section>
                     <button 
                         type='submit'

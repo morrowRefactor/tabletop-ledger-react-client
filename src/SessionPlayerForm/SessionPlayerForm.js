@@ -6,6 +6,7 @@ class SessionPlayer extends Component {
     static contextType = APIContext;
 
     render() {
+        // populates a unique ID to form fields for identification when form is submitted
         const winnerID = `winnerID[${this.props.id}]`;
         const playerID = `playerID[${this.props.id}]`;
         const scoreID = `scoreID[${this.props.id}]`;

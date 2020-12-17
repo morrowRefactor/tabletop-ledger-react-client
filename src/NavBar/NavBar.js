@@ -12,6 +12,7 @@ class Navbar extends Component {
         TokenService.clearAuthToken();
     };
 
+    // display logout link when user is logged in
     renderLogoutLink() {
         return (
           <li>
@@ -25,10 +26,11 @@ class Navbar extends Component {
         );
     };
 
+    // display user's profile link when logged in
     renderProfileLink() {
       let id =this.context.thisUser.id;
 
-      // check whether a user is logged in, but dont populated in the api context
+      // check whether a user is logged in, but didn't populated in the api context
       const token = TokenService.getAuthToken();
       if(!this.context.thisUser.id && token.length > 20) {
           const user = jwt_decode(token);
@@ -54,6 +56,7 @@ class Navbar extends Component {
       );
     };
     
+    // display user registration link when no auth token is present
     renderCreateLink() {
         return (
           <li>
@@ -66,6 +69,7 @@ class Navbar extends Component {
         );
     };
 
+    // display user login link when no auth token is present
     renderLoginLink() {
       return (
         <li>

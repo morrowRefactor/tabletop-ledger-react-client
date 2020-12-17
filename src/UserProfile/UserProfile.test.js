@@ -1,14 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import App from './App';
-import './App.css';
+import UserProfile from './UserProfile';
+import './UserProfile.css';
 
-it('renders App without crashing', () => {
+it('renders UserProfile without crashing', () => {
   const div = document.createElement('div');
+  const match = {params: { uid: 1 }};
   ReactDOM.render(
     <BrowserRouter>
-      <App />
+      <UserProfile 
+        match={match}
+      />
     </BrowserRouter>,
     div
   )

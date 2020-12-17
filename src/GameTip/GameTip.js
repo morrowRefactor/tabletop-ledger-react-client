@@ -6,7 +6,7 @@ class GameTip extends Component {
     static contextType = APIContext;
 
     render() {
-        const user = this.context.users.find(({id}) => id === this.props.uid);
+        const user = this.context.users.find(({id}) => id === this.props.uid) || {};
 
         return (
             <section className='GameTip'>

@@ -81,10 +81,12 @@ class GamePageMain extends Component {
     };
 
     render() {
+        // ensure games are populated in context when component loads
         if(this.context.games.length < 1 || this.context.sessions.length < 1) {
             this.getGames();
         }
         
+        // display a subset of ten games on the page
         const trimGames = this.context.games.slice(0, 10);
         const games = trimGames.map(game =>
             <GameBlock
@@ -97,6 +99,7 @@ class GamePageMain extends Component {
             />
         );
 
+        // this variable represents the array of available games that will populate in the search dropdown
         let gameList = [];
         if(this.context.games.length > 0) {
             for(let i = 0; i < this.context.games.length; i++) {

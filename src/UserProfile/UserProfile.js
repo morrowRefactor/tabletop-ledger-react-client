@@ -19,6 +19,7 @@ class UserProfile extends Component {
         let usersGames;
         const sessionLink = '/add-session/' + parseInt(this.props.match.params.uid);
 
+        // ensure that all required data is present in context
         if(this.context.users.length < 1 || this.context.userGames.length < 1) {
             this.context.refreshState();
             this.context.getBadgeData();

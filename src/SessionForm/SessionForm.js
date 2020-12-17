@@ -42,6 +42,7 @@ class SessionForm extends Component {
         };
     };
 
+    // update state with form field inputs
     updateName = name => {
         this.setState({sessName: name});
     };
@@ -93,6 +94,7 @@ class SessionForm extends Component {
         };
     };
     
+    // add fields to the form when user wants to add more players
     addPlayer = () => {
         let newCount = this.state.playerCount.value;
         newCount.push(newCount.length + 1);
@@ -133,6 +135,7 @@ class SessionForm extends Component {
         }
     }
 
+    // set whether the user is inputing a scored game or a win/loss game
     setGameType = type => {
         if(this.state.submitError.status == true) {
             this.setState({
@@ -180,7 +183,7 @@ class SessionForm extends Component {
             });
         };
 
-        // player info needs to be validated prior to submission
+        // host user (submitting user) info needs to be validated prior to submission
         if(this.state.gameType === 'scored') {
             const hostNameCheck = document.getElementById('hostName');
             if(!hostNameCheck || hostNameCheck.value.length < 1) {
@@ -221,7 +224,7 @@ class SessionForm extends Component {
         let hostScore = {};
         let winnerVal;
 
-        // check whether a scored or win/loss session was submitted
+        // populate the host's score object for the session
         const gameType = document.getElementById('winLoss').value;
         if(gameType === 'Yes' || gameType === 'No') {
             if (gameType === 'Yes') {
@@ -252,6 +255,8 @@ class SessionForm extends Component {
         newArr.push(hostScore);
         newSessionScores = newArr;
 
+        // ensure a name and score is included for each player where relevant
+        // if required values are present, populaye a score object for each player
         if(this.state.gameType === 'win-loss') {
             if(this.state.playerCountWL.length > 0) {
                 for(let i = 0; i < this.state.playerCountWL.length; i++) {
@@ -317,7 +322,7 @@ class SessionForm extends Component {
             }
         }
         
-        
+        // if all required data is present, proceed to POST data and populate all other required info
         if(this.state.submitError.status == false) {
             this.setState({
                 validatedHostScore: hostScore,
@@ -328,6 +333,7 @@ class SessionForm extends Component {
         }
     };
 
+    // submit the overall session info to the sessions table in db
     submitSession = () => {
         const newSession = {
             game_id: this.state.gameID,
@@ -368,6 +374,7 @@ class SessionForm extends Component {
         })
     };
     
+    // POST any session notes included in the submission
     handleSessionNotes = newSession => {
         const newNote = {
             uid: this.state.hostID,
@@ -399,6 +406,7 @@ class SessionForm extends Component {
         
     };
 
+    // POST the array of users included in the form
     handleSessionPlayers = newSession => {
         const newSessionScores = this.state.validatedPlayers;
         newSessionScores.forEach(sess => {
@@ -427,6 +435,7 @@ class SessionForm extends Component {
         }) 
     }
 
+    // POST the host user's data to the user standigs table for leaderboard tracking
     handleHostStats = hostScore => {
         const currStats = this.context.userStandings.find(({uid}) => uid === hostScore.uid);
         let newStats = currStats;
@@ -511,6 +520,8 @@ class SessionForm extends Component {
         let updateUserCatLogs = [];
         let updateUserMechLogs = [];
 
+        // check whether all game mechanics and categories already exists in db
+        // if not, POST them to the appropriate tables
         gameCats.forEach(cat => {
             const catCheck = userCatLogs.find(({ cat_id }) => cat_id === cat);
 
@@ -688,7 +699,10 @@ class SessionForm extends Component {
         const dateError = this.validateDate();
         let gameList = [];
         let user = { name: '' };
-        const addGameLink = `/add-games/${parseInt(this.props.match.params.uid)}`
+        const uid = parseInt(this.props.match.params.uid) || 1;
+        const addGameLink = `/add-games/${uid}`;
+
+        // display field inputs for each player of scored game
         const sessionPlayers = this.state.playerCount.value.map(plyr => 
             <SessionPlayerForm
                 key={plyr}
@@ -698,6 +712,7 @@ class SessionForm extends Component {
             />
         );
 
+        // display field inputs for each player of a win/loss game
         const sessionPlayersWL = this.state.playerCountWL.map(plyr => 
             <AddSessionPlayerForm
                 key={plyr}
@@ -707,6 +722,7 @@ class SessionForm extends Component {
             />
         );
         
+        // ensure necessary data is present in context when page loads
         if(this.context.users.length < 1 || this.context.userGameMechLogs.length < 1) {
             this.context.refreshState();
             this.context.getUserData();

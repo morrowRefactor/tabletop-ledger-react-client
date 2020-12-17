@@ -7,8 +7,9 @@ class Leaderboard extends Component {
     static contextType = APIContext;
 
     render() {
+        // combines the user standings data with the user's account data for display
+        // combining win, loss, session counts with user's name
         let userStats = [];
-
         for(let i = 0; i < this.context.userStandings.length; i++) {
             const user = this.context.users.find(({ id }) => id === this.context.userStandings[i].uid)
             const userData = {

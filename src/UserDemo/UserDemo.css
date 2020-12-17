@@ -1,52 +1,55 @@
-.UserRegistration_logo {
+.UserDemo_logo {
     display: none;
 }
 
-.UserRegistration_form {
+.userDemoIntro {
+    border-top: 1px solid rgb(210, 210, 210);
+    border-bottom: 1px solid rgb(210, 210, 210);
+    margin-bottom: 20px;
+}
+
+.UserDemo_form {
     width: 50%;
     margin-left: auto;
     margin-right: auto;
     text-align: left;
 }
 
-.userRegistration_formFields > label {
+.userDemo_formFields > label {
     display: inline-block;
     width: 100%;
 }
 
-.userRegistration_formFields > input {
-    margin-bottom: 20px;
+.userDemo_formFields > input {
     width: 100%;
+    margin-bottom: 20px;
 }
 
-#userInfo {
-    height: 50px;
-}
-
-.passwordError {
+.userDemo_formCredError {
     font-size: 12px;
     color: red;
+    margin-bottom: 10px;
 }
 
 @media (min-width: 800px) {
-    .UserRegistration {
+    .UserDemo {
         display: flex;
         flex-direction: row;
         width: 50%;
         margin: 50px auto 20px auto;
     }
 
-    .UserRegistration_logo {
+    .UserDemo_logo {
         display: inline-block;
         width: 30%;
-        padding-top: 10vh;
+        padding-top: 5vh;
     }
 
-    .userRegistration_logoImage {
+    .userDemo_logoImage {
         width: 10vw;
     }
 
-    .UserRegistration_form {
+    .UserDemo_form {
         margin-left: 0px;
     }
 }

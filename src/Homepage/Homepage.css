@@ -54,6 +54,10 @@
     margin-top: 0px;
 }
 
+.homepage_getStartedDemo {
+    font-size: 12px;
+}
+
 @media (min-width: 400px) {
     .homepage_getStartedLogo {
         width: 30%;

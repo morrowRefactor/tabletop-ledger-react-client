@@ -27,7 +27,8 @@ class EditUserGame extends Component {
             this.context.getUserData();
         }
         
-        const { uid, game_id } = this.props.location.state;
+        // get full array of all user's games and match to the one they want to edit
+        const { uid, game_id } = this.props.location.state || {};
         let allUsersGames = [];
         for(let i = 0; i < this.context.userGames.length; i++) {
             if(this.context.userGames[i].uid === uid) {
@@ -37,7 +38,7 @@ class EditUserGame extends Component {
             }
         }
         const gameID = game_id;
-        const thisGame = allUsersGames.find(({ game_id }) => game_id === gameID);
+        const thisGame = allUsersGames.find(({ game_id }) => game_id === gameID) || {};
 
         this.setState({
             uid: uid,
@@ -105,7 +106,7 @@ class EditUserGame extends Component {
     };
 
     render() {
-        const thisGame = this.context.games.find(({ id }) => id === parseInt(this.props.match.params.game_id));
+        const thisGame = this.context.games.find(({ id }) => id === parseInt(this.props.match.params.game_id)) || {};
 
         return (
             <section className='EditUserGame'>

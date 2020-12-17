@@ -1,6 +1,6 @@
 .Leaderboard {
     width: 90%;
-    margin-bottom: 20px;
+    margin: 0px auto 50px auto;
 }
 
 @media (min-width: 800px) {

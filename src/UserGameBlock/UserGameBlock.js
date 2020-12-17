@@ -12,10 +12,13 @@ class UserGameBlock extends Component {
         const uid = this.props.uid;
         const gameLink = `/game/${this.props.gameID}/${linkText}`;
         const editLink = `/edit-game/${this.props.gameID}`;
-
-        const userGameSpecs = this.context.userGames.filter(function(game) {
-            return game.game_id === gameID && game.uid === uid;
-        })
+        // get the data specific to this game in the user's collection
+        let userGameSpecs = this.context.userGames.filter(function(game) {
+            return (game.game_id === gameID && game.uid === uid);
+        });
+        if(userGameSpecs.length < 1) {
+            userGameSpecs = [{rating: 'NA'}];
+        };
 
         return (
             <section className='UserBoardGame'>

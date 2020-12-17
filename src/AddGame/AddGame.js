@@ -23,6 +23,8 @@ class AddGame extends Component {
         };
     };
 
+    // when user submits form, use BGG API to search for game titles matching submitted text
+    // multiple results can match, so this returns all results so user can select the exact one to add
     getBGGid = game => {
         const baseURL = 'https://www.boardgamegeek.com/xmlapi2/search?query=';
         const url = baseURL + game + '&type=boardgame';
@@ -50,6 +52,7 @@ class AddGame extends Component {
         .catch(err => console.log(err));
     }
 
+    // once user selects exact game to add, use that specific BGG game ID to get all additional game details
     getGameDetails = id => {
         const baseURL = 'https://www.boardgamegeek.com/xmlapi2/thing?id=';
         const url = baseURL + id + '&stats=1';
@@ -289,6 +292,7 @@ class AddGame extends Component {
         }
     }
 
+    // check whether the game already exists in the TTL database
     checkDupeGame = () => {
         const checkGame = this.context.games.find(({ bgg_id }) => bgg_id === parseInt(this.state.selectedGame.bgg_id));
         if(checkGame) {

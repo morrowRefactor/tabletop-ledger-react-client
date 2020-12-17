@@ -6,6 +6,7 @@ import PrivateRoute from '../Utils/PrivateRoute';
 import PublicOnlyRoute from '../Utils/PublicOnlyRoute';
 import UserLogin from '../UserLogin/UserLogin';
 import UserRegistration from '../UserRegistration/UserRegistration';
+import UserDemo from '../UserDemo/UserDemo';
 import GamePageMain from '../GamePageMain/GamePageMain';
 import GamePage from '../GamePage/GamePage';
 import Leaderboard from '../Leaderboard/Leaderboard';
@@ -329,6 +330,11 @@ class App extends Component {
             exact
             path='/create-account'
             component={UserRegistration}
+          />
+          <PublicOnlyRoute
+            exact
+            path='/demo'
+            component={UserDemo}
           />
           <PublicOnlyRoute
             exact

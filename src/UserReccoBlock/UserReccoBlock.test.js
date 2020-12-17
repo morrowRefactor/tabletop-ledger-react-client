@@ -1,14 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import App from './App';
-import './App.css';
+import UserReccoBlock from './UserReccoBlock';
+import './UserReccoBlock.css';
 
-it('renders App without crashing', () => {
+it('renders UserReccoBlock without crashing', () => {
   const div = document.createElement('div');
   ReactDOM.render(
     <BrowserRouter>
-      <App />
+      <UserReccoBlock
+        uid={1}
+        recco={2}
+        note={'some note text'}
+      />
     </BrowserRouter>,
     div
   )

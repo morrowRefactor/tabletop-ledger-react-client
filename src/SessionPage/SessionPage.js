@@ -16,6 +16,7 @@ class SessionPage extends Component {
         let playerNotes;
         let displayDate;
 
+        // ensure necessary data is present in context when page loads
         if(this.context.sessions.length < 1 || this.context.games.length < 1) {
             this.context.getSessionData();
             this.context.refreshState();

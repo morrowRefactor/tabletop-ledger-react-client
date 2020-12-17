@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import App from './App';
-import './App.css';
+import Leaderboard from './Leaderboard';
+import './Leaderboard.css';
 
-it('renders App without crashing', () => {
+it('renders Leaderboard without crashing', () => {
   const div = document.createElement('div');
   ReactDOM.render(
     <BrowserRouter>
-      <App />
+      <Leaderboard />
     </BrowserRouter>,
     div
   )

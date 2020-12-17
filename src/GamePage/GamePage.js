@@ -16,6 +16,7 @@ class GamePage extends Component {
         this.context.getSessionData();
     }
 
+    // allows users to add a game to their account list
     addUserGame = gameId => {
         const token = TokenService.getAuthToken();
         const user = jwt_decode(token);
@@ -89,6 +90,7 @@ class GamePage extends Component {
         let thisGame = { title: '' };
         let gamePlays = 0;
         
+        // ensure games are populated in state when loading component
         if(!gameCheck || this.context.games.length < 1) {
             this.getGames();
         }

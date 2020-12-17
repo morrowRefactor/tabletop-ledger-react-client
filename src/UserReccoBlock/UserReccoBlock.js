@@ -6,8 +6,8 @@ import './UserReccoBlock.css';
 class UserReccoBlock extends Component {
     static contextType = APIContext;
     render() {
-        const user = this.context.users.find(({id}) => id === this.props.uid);
-        const recco = this.context.games.find(({id}) => id === this.props.recco);
+        const user = this.context.users.find(({id}) => id === this.props.uid) || { name: '' };
+        const recco = this.context.games.find(({id}) => id === this.props.recco) || { title: '' };
 
         const linkText = recco.title.replace(/\s+/g, '-').toLowerCase();
         const reccoLink = `/game/${recco.id}/${linkText}`;

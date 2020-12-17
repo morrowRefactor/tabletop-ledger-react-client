@@ -37,6 +37,7 @@ class Homepage extends Component {
                         <h3 className='homepage_getStartedHeader'>Get Started</h3>
                         <p>Create an account and upgrade your tabletop gaming hobby!</p>
                         <Link to='/create-account'>Let's Go!</Link>
+                        <p className='homepage_getStartedDemo'>Want to try it out first? Use our <Link to='/demo'>demo account</Link></p>
                     </div>
                 </section>
             </section>

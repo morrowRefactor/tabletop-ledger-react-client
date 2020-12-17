@@ -1,14 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import App from './App';
-import './App.css';
+import SessionNotesBlock from './SessionNotesBlock';
+import './SessionNotesBlock.css';
 
-it('renders App without crashing', () => {
+it('renders SessionNotesBlock without crashing', () => {
   const div = document.createElement('div');
   ReactDOM.render(
     <BrowserRouter>
-      <App />
+      <SessionNotesBlock
+        name={'Test Name'}
+        note={'Test note text'}
+      />
     </BrowserRouter>,
     div
   )

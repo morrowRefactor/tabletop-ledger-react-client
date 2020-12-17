@@ -21,7 +21,6 @@ class UserLogin extends Component {
 
     handleSubmitJwtAuth = ev => {
         ev.preventDefault()
-        this.setState({ error: null })
         
         AuthApiService.postLogin({
             name: this.state.userName.value,
