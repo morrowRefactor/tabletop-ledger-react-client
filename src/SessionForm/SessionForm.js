@@ -116,7 +116,6 @@ class SessionForm extends Component {
     removePlayer = player => {
         if(player.includes('WL')) {
             const currCount = this.state.playerCountWL;
-            const newPlayerCount = currCount.pop();
             
             this.setState({
                 playerCountWL: currCount
@@ -124,7 +123,6 @@ class SessionForm extends Component {
         }
         else {
             const currCount = this.state.playerCount.value;
-            const newPlayerCount = currCount.pop();
             
             this.setState({
                 playerCount: {
@@ -412,7 +410,7 @@ class SessionForm extends Component {
         newSessionScores.forEach(sess => {
             sess.session_id = newSession.id
         });
-
+        
         fetch(`${config.API_ENDPOINT}/api/session-scores`, {
             method: 'POST',
             body: JSON.stringify(newSessionScores),
@@ -432,7 +430,7 @@ class SessionForm extends Component {
         })
         .catch(error => {
             this.setState({ error })
-        }) 
+        })
     }
 
     // POST the host user's data to the user standigs table for leaderboard tracking
@@ -577,9 +575,9 @@ class SessionForm extends Component {
                 updateUserMechLogs = newArr;
             }
         });
-
+        
         if(newUserCatLogs.length > 0) {
-            this.apiHelpers.postNewUserCatLogs(newUserCatLogs);
+            apiHelpers.postNewUserCatLogs(newUserCatLogs);
 
             newUserCatLogs.forEach(log => {
                 const newUserBadgeCat = {
@@ -587,12 +585,11 @@ class SessionForm extends Component {
                     badge_id: log.cat_id,
                     tier_id: 1
                 };
-
-                this.apiHelpers.postUserCatBadge(newUserBadgeCat);
+                apiHelpers.postUserCatBadge(newUserBadgeCat);
             });
         };
         if(newUserMechLogs.length > 0) {
-            this.apiHelpers.postNewUserMechLogs(newUserMechLogs);
+            apiHelpers.postNewUserMechLogs(newUserMechLogs);
 
             newUserMechLogs.forEach(log => {
                 const newUserBadgeMech = {
@@ -600,8 +597,7 @@ class SessionForm extends Component {
                     badge_id: log.mech_id,
                     tier_id: 1
                 };
-
-                this.apiHelpers.postUserMechBadge(newUserBadgeMech);
+                apiHelpers.postUserMechBadge(newUserBadgeMech);
             });
         };
         if(updateUserCatLogs.length > 0) {
@@ -628,7 +624,7 @@ class SessionForm extends Component {
                             tier_id: 2
                         };
     
-                        this.apiHelpers.patchUserCatBadge(badgeToUpdate.id, updateUserBadgeCat);
+                        apiHelpers.patchUserCatBadge(badgeToUpdate.id, updateUserBadgeCat);
                     }  
                 }
 
@@ -641,7 +637,7 @@ class SessionForm extends Component {
                             tier_id: 3
                         };
     
-                        this.apiHelpers.patchUserCatBadge(badgeToUpdate.id, updateUserBadgeCat);
+                        apiHelpers.patchUserCatBadge(badgeToUpdate.id, updateUserBadgeCat);
                     }  
                 }
             })
@@ -670,7 +666,7 @@ class SessionForm extends Component {
                             tier_id: 2
                         };
     
-                        this.apiHelpers.patchUserMechBadge(badgeToUpdate.id, updateUserBadgeMech);
+                        apiHelpers.patchUserMechBadge(badgeToUpdate.id, updateUserBadgeMech);
                     }  
                 }
 
@@ -683,7 +679,7 @@ class SessionForm extends Component {
                             tier_id: 3
                         };
     
-                        this.apiHelpers.patchUserMechBadge(badgeToUpdate.id, updateUserBadgeMech);
+                        apiHelpers.patchUserMechBadge(badgeToUpdate.id, updateUserBadgeMech);
                     }  
                 }
             })

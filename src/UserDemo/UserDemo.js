@@ -49,6 +49,7 @@ class UserDemo extends Component {
                     <div className='userDemoIntro'>
                         <p>Want to get a sense of Tabletop Ledger before creating an account? We're happy to oblige!</p>
                         <p>Login with the credentials below and you can test logging game sessions and updating an account.</p>
+                        <p className='userDemoIntroNote'>Please Note: Any changes made in the demo account will not appear in the leaderboard standings.</p>
                     </div>
                     <section className='userDemo_formFields'>
                         <label htmlFor='userName'>
@@ -57,7 +58,7 @@ class UserDemo extends Component {
                         <input
                             type='text'
                             id='userName'
-                            value='Testy McTester'
+                            defaultValue='Testy McTester'
                             required
                         />
                     </section>
@@ -68,7 +69,7 @@ class UserDemo extends Component {
                         <input
                             type='password'
                             id='userPassword'
-                            value='Something12!'
+                            defaultValue='Something12!'
                             required
                         />
                     </section>

@@ -31,6 +31,10 @@
     margin-bottom: 10px;
 }
 
+.userDemoIntroNote {
+    font-size: 12px;
+}
+
 @media (min-width: 800px) {
     .UserDemo {
         display: flex;

@@ -56,30 +56,31 @@ class UserProfile extends Component {
                         badgeName = this.context.gameMechanics[i].name;
                     }
                 }
-                    const tierName = this.context.badgeTiers.find(({ id }) => id === badge.tier_id);
-                    const userBadge = { id: badge.id, name: badgeName, tier: tierName.name };
-                    let newArr = mechBadgeMatches;
-                    newArr.push(userBadge);
-                    mechBadgeMatches = newArr;
+
+                const tierName = this.context.badgeTiers.find(({ id }) => id === badge.tier_id);
+                const userBadge = { id: badge.id, name: badgeName, tier: tierName.name };
+                let newArr = mechBadgeMatches;
+                newArr.push(userBadge);
+                mechBadgeMatches = newArr;
                 }
             );
             
             userMechBadges = mechBadgeMatches.map(badge => 
-                <p className='userProfile_bagdesText' key={badge.id}>{badge.name} {badge.tier}</p>
+                <p className='userProfile_badgesText' key={badge.id}>{badge.name} {badge.tier}</p>
             );
             
             getCatBadges.forEach(badge => {
-                    let badgeName;
-                    for(let i = 0; i < this.context.gameCategories.length; i++) {
-                        if(this.context.gameCategories[i].cat_id === badge.badge_id) {
-                            badgeName = this.context.gameCategories[i].name;
-                        }
+                let badgeName;
+                for(let i = 0; i < this.context.gameCategories.length; i++) {
+                    if(this.context.gameCategories[i].cat_id === badge.badge_id) {
+                        badgeName = this.context.gameCategories[i].name;
                     }
-                    const tierName = this.context.badgeTiers.find(({ id }) => id === badge.tier_id);
-                    const userBadge = { id: badge.id, name: badgeName, tier: tierName.name };
-                    let newArr = catBadgeMatches;
-                    newArr.push(userBadge);
-                    catBadgeMatches = newArr;
+                }
+                const tierName = this.context.badgeTiers.find(({ id }) => id === badge.tier_id);
+                const userBadge = { id: badge.id, name: badgeName, tier: tierName.name };
+                let newArr = catBadgeMatches;
+                newArr.push(userBadge);
+                catBadgeMatches = newArr;
                 }
             );
             
@@ -143,12 +144,12 @@ class UserProfile extends Component {
                     <section className='UserProfile_badges'>
                         <h3>Your Badges</h3>
                         <p className='userProfile_badgesHeader'>Mechanics Badges</p>
-                        {mechBadgeMatches.length > 1
+                        {mechBadgeMatches.length > 0
                             ? userMechBadges
                             : 'No badges yet'
                         }
                         <p className='userProfile_badgesHeader'>Category Badges</p>
-                        {catBadgeMatches.length > 1
+                        {catBadgeMatches.length > 0
                             ? userCatBadges
                             : 'No badges yet'
                         }
