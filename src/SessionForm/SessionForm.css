@@ -26,8 +26,40 @@
 .sessionForm_Header {
     display: inline-block;
     width: 90%;
-    padding-top: 15px;
+}
+
+.sessionFormGameTypeHeader {
+    width: 90%;
+    padding-top: 10px;
+    margin: auto auto 30px auto;
     border-top: 2px solid rgb(230, 230, 230);
+}
+
+.sessionForm_gameTypeOptions,
+.sessionForm_gameWinOptions {
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    margin: auto auto 20px auto;
+    padding-left: 20px;
+    border-bottom: 1px solid rgb(230, 230, 230);
+}
+
+.gameTypeButton,
+.gameWinOption {
+    border: 1px solid rgb(230, 230, 230);
+    border-bottom: none;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    line-height: 2em;
+    padding-right: 20px;
+    margin-right: 5px;
+    background-color: white;
+}
+
+.highlight {
+    background-color: rgb(28, 102, 28);
+    color: white;
 }
 
 .sessionForm_playerInfo {

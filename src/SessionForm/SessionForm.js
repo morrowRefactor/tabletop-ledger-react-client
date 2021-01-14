@@ -22,6 +22,8 @@ class SessionForm extends Component {
             gameTitle: { value: '', touched: false },
             date: { value: '', touched: false },
             notes: { value: '', touched: false },
+            typeSelection: { value: '', touched: false },
+            winTypeSelection: { value: '', touched: false },
             playerCount: { value: [ ], touched: false },
             playerCountWL: [ ],
             scores: [],
@@ -77,6 +79,14 @@ class SessionForm extends Component {
 
     updateNotes = note => {
         this.setState({notes: {value: note, touched: true }});
+    };
+
+    updateTypeSelect = type => {
+        this.setState({typeSelection: {value: type, touched: true}});
+    };
+
+    updateWinTypeSelect = type => {
+        this.setState({winTypeSelection: {value: type, touched: true}});
     };
 
     //validate form field inputs
@@ -400,8 +410,6 @@ class SessionForm extends Component {
         .catch(error => {
             this.setState({ error })
         })
-
-        
     };
 
     // POST the array of users included in the form
@@ -697,6 +705,15 @@ class SessionForm extends Component {
         let user = { name: '' };
         const uid = parseInt(this.props.match.params.uid) || 1;
         const addGameLink = `/add-games/${uid}`;
+        const renderWinOptions = this.state.typeSelection.touched ? 'sessionForm_gameWinOptions' : 'hidden';
+        const renderScoredForm = this.state.winTypeSelection.value === 'Scored' ? 'sessionForm_scored' : 'hidden';
+        const renderWinLossForm = this.state.winTypeSelection.value === 'WinLoss' ? 'sessionForm_winLoss' : 'hidden';
+        const buttonClassCompetitive = this.state.typeSelection.value === 'Competitive' ? 'gameTypeButton highlight' : 'gameTypeButton';
+        const buttonClassCooperative = this.state.typeSelection.value === 'Cooperative' ? 'gameTypeButton highlight' : 'gameTypeButton';
+        const buttonClassSolo = this.state.typeSelection.value === 'Solo' ? 'gameTypeButton highlight' : 'gameTypeButton';
+        const buttonClassTeams = this.state.typeSelection.value === 'Teams' ? 'gameTypeButton highlight' : 'gameTypeButton';
+        const buttonClassScored = this.state.winTypeSelection.value === 'Scored' ? 'gameTypeButton highlight' : 'gameTypeButton';
+        const buttonClassWinLoss = this.state.winTypeSelection.value === 'WinLoss' ? 'gameTypeButton highlight' : 'gameTypeButton';
 
         // display field inputs for each player of scored game
         const sessionPlayers = this.state.playerCount.value.map(plyr => 
@@ -794,7 +811,6 @@ class SessionForm extends Component {
                             id='date'
                             min='2020-01-01'
                             onChange={e => this.updateDate(e.target.value)}
-                            required
                         />
                         {this.state.date.touched && (
                             <ValidationError message={dateError} />
@@ -811,8 +827,19 @@ class SessionForm extends Component {
                             onChange={e => this.updateNotes(e.target.value)}
                         />
                     </section>
-                    <h3 className='sessionForm_Header'>Scored Sessions</h3>
-                    <section className='sessionForm_formField'>
+                    <h3 className='sessionFormGameTypeHeader'>Select the type of game play</h3>
+                    <section className='sessionForm_gameTypeOptions'>
+                        <button className={buttonClassCompetitive} onClick={() => this.updateTypeSelect('Competitive')}>Competitive</button>
+                        <button className={buttonClassCooperative} onClick={() => this.updateTypeSelect('Cooperative')}>Cooperative</button>
+                        <button className={buttonClassSolo} onClick={() => this.updateTypeSelect('Solo')}>Solo</button>
+                        <button className={buttonClassTeams} onClick={() => this.updateTypeSelect('Teams')}>Teams</button>
+                    </section>
+                    <section className={renderWinOptions}>
+                        <button className={buttonClassScored} onClick={() => this.updateWinTypeSelect('Scored')}>Scored Session</button>
+                        <button className={buttonClassWinLoss} onClick={() => this.updateWinTypeSelect('WinLoss')}>Win/Loss Session</button>
+                    </section>
+                    <section className={renderScoredForm}>
+                        <h3 className='sessionForm_Header'>Scored Sessions</h3>
                         <label htmlFor='sessionPlayer'>
                             Session Players
                         </label>
@@ -872,8 +899,8 @@ class SessionForm extends Component {
                         }
                         </div>
                     </section>
-                    <h3 className='sessionForm_Header'>Win/Loss Sessions</h3>
-                    <section className='sessionForm_winLoss'>
+                    <section className={renderWinLossForm}>
+                        <h3 className='sessionForm_Header'>Win/Loss Sessions</h3>
                         <div className='sessionForm_winLossField'>
                             <label htmlFor='winLoss'>
                                 Did you win?
@@ -902,8 +929,7 @@ class SessionForm extends Component {
                         </div>
                         {sessionPlayersWL}
                         <button className='sessionForm_addPlayer' type='button' onClick={e => this.addPlayerWL()}>Add another player</button>
-                    </section>
-                    <div className='AddDestinationForm_buttons'>
+                        <div className='sessionForm_buttons'>
                         <button 
                             type='button'
                             onClick={e => this.handleSubmit()}
@@ -914,13 +940,14 @@ class SessionForm extends Component {
                         <button type='button' onClick={e => this.handleClickCancel}>
                             Cancel
                         </button>
-                    </div>
-                    <div className='AddDestinationForm_credError'>
+                        </div>
+                    </section>
+                    <section className='sessionForm_credError'>
                         {this.state.submitError.status
                             ? this.state.submitError.value
                             : ''
                         }
-                    </div>
+                    </section>
                 </form>
             </section>
         );
