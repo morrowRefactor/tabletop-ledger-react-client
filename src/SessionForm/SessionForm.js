@@ -368,124 +368,56 @@ class SessionForm extends Component {
             return res.json()
         })
         .then(data => {
-            if(this.state.notes.touched === true && this.state.notes.value.length > 0) {
-                this.handleSessionNotes(data);
-                this.handleUserCatMechLogs(newSession.game_id);
-            }
-            else {
-                this.handleSessionPlayers(data);
-                this.handleUserCatMechLogs(newSession.game_id);
-            }
+            this.packageSessionData(data);
         })
         .catch(error => {
             this.setState({ error })
         })
     };
-    
-    // POST any session notes included in the submission
-    handleSessionNotes = newSession => {
-        const newNote = {
-            uid: this.state.hostID,
-            session_id: newSession.id,
-            note: this.state.notes.value
+
+    // after obtaining the new session ID, package all remaining session data for POST
+    packageSessionData = newSess => {
+        let sessionData = {};
+
+        // handle session notes
+        if(this.state.notes.touched === true && this.state.notes.value.length > 0) {
+            const newNote = {
+                uid: this.state.hostID,
+                session_id: newSess.id,
+                note: this.state.notes.value
+            };
+
+            sessionData.notes = newNote;
         };
 
-        fetch(`${config.API_ENDPOINT}/api/session-notes`, {
-            method: 'POST',
-            body: JSON.stringify(newNote),
-            headers: {
-              'content-type': 'application/json',
-              'authorization': `bearer ${TokenService.getAuthToken()}`
-            }
-        })
-        .then(res => {
-            if (!res.ok) {
-                return res.json().then(error => {
-                    throw error
-                })
-            }
-            
-            this.handleSessionPlayers(newSession);
-        })
-        .catch(error => {
-            this.setState({ error })
-        })
-    };
-
-    // POST the array of users included in the form
-    handleSessionPlayers = newSession => {
-        const newSessionScores = this.state.validatedPlayers;
+        // handle player scores
+        let newSessionScores = this.state.validatedPlayers;
         newSessionScores.forEach(sess => {
-            sess.session_id = newSession.id
+            sess.session_id = newSess.id
         });
-        
-        fetch(`${config.API_ENDPOINT}/api/session-scores`, {
-            method: 'POST',
-            body: JSON.stringify(newSessionScores),
-            headers: {
-                'content-type': 'application/json',
-                'authorization': `bearer ${TokenService.getAuthToken()}`
-            }
-        })
-        .then(res => {
-            if (!res.ok) {
-                return res.json().then(error => {
-                    throw error
-                })
-            }
-            
-            this.handleHostStats(this.state.validatedHostScore);
-        })
-        .catch(error => {
-            this.setState({ error })
-        })
-    }
+        sessionData.scores = newSessionScores;
 
-    // POST the host user's data to the user standigs table for leaderboard tracking
-    handleHostStats = hostScore => {
-        const currStats = this.context.userStandings.find(({uid}) => uid === hostScore.uid);
+        // handle host player's user standings stats
+        const currStats = this.context.userStandings.find(({uid}) => uid === this.state.hostID);
         let newStats = currStats;
 
-        if(hostScore.winner === true) {
+        if(this.state.validatedHostScore.winner === true) {
             newStats.sessions = currStats.sessions + 1;
             newStats.wins = currStats.wins + 1;
         }
-        else{
+        else {
             newStats.sessions = currStats.sessions + 1;
             newStats.losses = currStats.losses + 1;
         }
-        
-        fetch(`${config.API_ENDPOINT}/api/user-standings/${newStats.id}`, {
-            method: 'PATCH',
-            body: JSON.stringify(newStats),
-            headers: {
-              'content-type': 'application/json',
-              'authorization': `bearer ${TokenService.getAuthToken()}`
-            }
-        })
-        .then(res => {
-            if (!res.ok) {
-                return res.json().then(error => {
-                    throw error
-                })
-            }
-        })
-        .then(() => {
-            this.props.history.push(`/gamer/${this.props.match.params.uid}/new-session`)
-        })
-        .catch(error => {
-            this.setState({ error })
-        })  
-    }
+        sessionData.hostStats = newStats;
 
-    // update the user logs for sessions played by game category and mechanic
-    handleUserCatMechLogs = gameID => {
+        // handle game mechanics and category updates
         // arrays of the category and mechanic IDs for this game
         let gameCats = [];
         let gameMechs = [];
 
         for(let i = 0; i < this.context.gameCatMatches.length; i++) {
-            if(this.context.gameCatMatches[i].game_id === gameID) {
+            if(this.context.gameCatMatches[i].game_id === newSess.game_id) {
                 let newArr = gameCats;
                 newArr.push(this.context.gameCatMatches[i].cat_id);
                 gameCats = newArr;
@@ -493,7 +425,7 @@ class SessionForm extends Component {
         }
 
         for(let i = 0; i < this.context.gameMechMatches.length; i++) {
-            if(this.context.gameMechMatches[i].game_id === gameID) {
+            if(this.context.gameMechMatches[i].game_id === newSess.game_id) {
                 let newArr = gameMechs;
                 newArr.push(this.context.gameMechMatches[i].mech_id);
                 gameMechs = newArr;
@@ -583,116 +515,33 @@ class SessionForm extends Component {
                 updateUserMechLogs = newArr;
             }
         });
-        
-        if(newUserCatLogs.length > 0) {
-            apiHelpers.postNewUserCatLogs(newUserCatLogs);
 
-            newUserCatLogs.forEach(log => {
-                const newUserBadgeCat = {
-                    uid: log.uid,
-                    badge_id: log.cat_id,
-                    tier_id: 1
-                };
-                apiHelpers.postUserCatBadge(newUserBadgeCat);
-            });
-        };
-        if(newUserMechLogs.length > 0) {
-            apiHelpers.postNewUserMechLogs(newUserMechLogs);
+        sessionData.newCatLogs = newUserCatLogs;
+        sessionData.updateCatLogs = updateUserCatLogs;
+        sessionData.newMechLogs = newUserMechLogs;
+        sessionData.updateMechLogs = updateUserMechLogs;
 
-            newUserMechLogs.forEach(log => {
-                const newUserBadgeMech = {
-                    uid: log.uid,
-                    badge_id: log.mech_id,
-                    tier_id: 1
-                };
-                apiHelpers.postUserMechBadge(newUserBadgeMech);
-            });
-        };
-        if(updateUserCatLogs.length > 0) {
-            updateUserCatLogs.forEach(log => {
-                apiHelpers.patchUserCatLogs(log);
-            });
-
-            let userCatBadges = [];
-            for(let i = 0; i < this.context.userBadgesCat.length; i++) {
-                if(this.context.userBadgesCat[i].uid === this.state.hostID) {
-                    let newArr = userCatBadges;
-                    newArr.push(this.context.userBadgesCat[i]);
-                    userCatBadges = newArr;
-                }
+        fetch(`${config.API_ENDPOINT}/api/session-package/`, {
+            method: 'POST',
+            body: JSON.stringify(sessionData),
+            headers: {
+              'content-type': 'application/json',
+              'authorization': `bearer ${TokenService.getAuthToken()}`
             }
-
-            updateUserCatLogs.forEach(log => {
-                if(log.sessions > 24 && log.sessions < 100) {
-                    const badgeToUpdate = userCatBadges.find(({ badge_id }) => badge_id === log.cat_id);
-                    if(badgeToUpdate.tier_id !== 2) {
-                        const updateUserBadgeCat = {
-                            uid: log.uid,
-                            badge_id: log.cat_id,
-                            tier_id: 2
-                        };
-    
-                        apiHelpers.patchUserCatBadge(badgeToUpdate.id, updateUserBadgeCat);
-                    }  
-                }
-
-                if(log.sessions > 99) {
-                    const badgeToUpdate = userCatBadges.find(({ badge_id }) => badge_id === log.cat_id);
-                    if(badgeToUpdate.tier_id !== 3) {
-                        const updateUserBadgeCat = {
-                            uid: log.uid,
-                            badge_id: log.cat_id,
-                            tier_id: 3
-                        };
-    
-                        apiHelpers.patchUserCatBadge(badgeToUpdate.id, updateUserBadgeCat);
-                    }  
-                }
-            })
-        };
-        if(updateUserMechLogs.length > 0) {
-            updateUserMechLogs.forEach(log => {
-                apiHelpers.patchUserMechLogs(log);
-            }); 
+        })
+        .then(res => {
+            if (!res.ok) {
+                return res.json().then(error => {
+                    throw error
+                })
+            }
             
-            let userMechBadges = [];
-            for(let i = 0; i < this.context.userBadgesMech.length; i++) {
-                if(this.context.userBadgesMech[i].uid === this.state.hostID) {
-                    let newArr = userMechBadges;
-                    newArr.push(this.context.userBadgesMech[i]);
-                    userMechBadges = newArr;
-                }
-            }
-
-            updateUserMechLogs.forEach(log => {
-                if(log.sessions > 24 && log.sessions < 100) {
-                    const badgeToUpdate = userMechBadges.find(({ badge_id }) => badge_id === log.mech_id);
-                    if(badgeToUpdate.tier_id !== 2) {
-                        const updateUserBadgeMech = {
-                            uid: log.uid,
-                            badge_id: log.mech_id,
-                            tier_id: 2
-                        };
-    
-                        apiHelpers.patchUserMechBadge(badgeToUpdate.id, updateUserBadgeMech);
-                    }  
-                }
-
-                if(log.sessions > 99) {
-                    const badgeToUpdate = userMechBadges.find(({ badge_id }) => badge_id === log.mech_id);
-                    if(badgeToUpdate.tier_id !== 3) {
-                        const updateUserBadgeMech = {
-                            uid: log.uid,
-                            badge_id: log.mech_id,
-                            tier_id: 3
-                        };
-    
-                        apiHelpers.patchUserMechBadge(badgeToUpdate.id, updateUserBadgeMech);
-                    }  
-                }
-            })
-        };
-    };
+            this.props.history.push(`/gamer/${this.props.match.params.uid}/new-session`)
+        })
+        .catch(error => {
+            this.setState({ error })
+        })
+    }
 
     handleClickCancel = () => {
         this.props.history.push('/');
