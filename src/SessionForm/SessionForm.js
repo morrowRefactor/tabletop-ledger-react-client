@@ -521,6 +521,107 @@ class SessionForm extends Component {
         sessionData.newMechLogs = newUserMechLogs;
         sessionData.updateMechLogs = updateUserMechLogs;
 
+        // update badge tracking data
+        // get arrays of user's current badges
+        let usersCatBadges = [];
+        let usersMechBadges = [];
+
+        this.context.userBadgesCat.forEach(badge => {
+            if(badge.uid === this.state.hostID) {
+                usersCatBadges.push(badge);
+            }
+        });
+        this.context.userBadgesMech.forEach(badge => {
+            if(badge.uid === this.state.hostID) {
+                usersMechBadges.push(badge);
+            }
+        });
+
+        // populate new badge data arrays
+        let newCatBadges = [];
+        let newMechBadges = [];
+
+        sessionData.newCatLogs.forEach(log => {
+            const newBadge = {
+                uid: this.state.hostID,
+                badge_id: log.cat_id,
+                tier_id: 1
+            };
+
+            newCatBadges.push(newBadge);
+        });
+
+        sessionData.newMechLogs.forEach(log => {
+            const newBadge = {
+                uid: this.state.hostID,
+                badge_id: log.mech_id,
+                tier_id: 1
+            };
+
+            newMechBadges.push(newBadge);
+        });
+
+        let updateCatBadges = [];
+        let updateMechBadges = [];
+
+        sessionData.updateCatLogs.forEach(log => {
+            if(log.sessions === 25) {
+                const catBadge = usersCatBadges.find(({ cat_id }) => cat_id === log.cat_id);
+                const newBadge = {
+                    id: catBadge.id,
+                    uid: this.state.hostID,
+                    badge_id: catBadge.cat_id,
+                    tier_id: 2
+                };
+
+                updateCatBadges.push(newBadge);
+            }
+
+            if(log.sessions === 100) {
+                const catBadge = usersCatBadges.find(({ cat_id }) => cat_id === log.cat_id);
+                const newBadge = {
+                    id: catBadge.id,
+                    uid: this.state.hostID,
+                    badge_id: log.cat_id,
+                    tier_id: 3
+                };
+
+                updateCatBadges.push(newBadge);
+            }
+        });
+
+        sessionData.updateMechLogs.forEach(log => {
+            if(log.sessions === 25) {
+                const mechBadge = usersMechBadges.find(({ mech_id }) => mech_id === log.mech_id);
+                const newBadge = {
+                    id: mechBadge.id,
+                    uid: this.state.hostID,
+                    badge_id: log.cat_id,
+                    tier_id: 2
+                };
+
+                updateMechBadges.push(newBadge);
+            }
+
+            if(log.sessions === 100) {
+                const mechBadge = usersMechBadges.find(({ mech_id }) => mech_id === log.mech_id);
+                const newBadge = {
+                    id: mechBadge.id,
+                    uid: this.state.hostID,
+                    badge_id: log.cat_id,
+                    tier_id: 3
+                };
+
+                updateMechBadges.push(newBadge);
+            }
+        });
+
+        sessionData.newCatBadges = newCatBadges;
+        sessionData.newMechBadges = newMechBadges;
+        sessionData.updateCatBadges = updateCatBadges;
+        sessionData.updateMechBadges = updateMechBadges;
+        console.log(sessionData);
+
         fetch(`${config.API_ENDPOINT}/api/session-package/`, {
             method: 'POST',
             body: JSON.stringify(sessionData),
