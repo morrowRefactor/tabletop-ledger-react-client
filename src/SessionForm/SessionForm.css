@@ -62,6 +62,10 @@
     color: white;
 }
 
+.hidden {
+    display: none;
+}
+
 .sessionForm_playerInfo {
     display: flex;
     flex-direction: row;

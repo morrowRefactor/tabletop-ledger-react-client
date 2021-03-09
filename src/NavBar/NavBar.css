@@ -2,6 +2,7 @@
     display: flex;
     flex-wrap: wrap;
     flex-direction: row-reverse;
+    position: relative;
     border: none;
     font-weight: bold;
     padding: 5px 10px 5px 10px;
@@ -31,6 +32,20 @@
     direction: ltr;
     min-width: 50px;
     padding: 5px 5px 5px 5px;
+}
+
+.TopNav_contentContainer {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    width: 150px;
+    z-index: 1;
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+    border-left: 2px solid white;
+    background-color: rgb(235, 235, 235, 0.9);
+    text-align: right;
+    margin-right: 10px;
 }
   
 .TopNav ul {
@@ -88,11 +103,23 @@
 
 .hamburgerButton,
 .topNavLink {
-    background-color: rgb(16, 60, 16);
     color: white;
+    background-color: rgb(16, 60, 16);
     border: none;
     text-decoration: none;
     font-size: .90em;
+}
+
+.topNavLink {
+    color: rgb(16, 60, 16);
+    background-color: rgb(235, 235, 235, 0.9);;
+    border: none;
+    text-decoration: none;
+    font-size: .90em;
+}
+
+.topNavLink {
+    padding-right: 10px;
 }
 
 button:hover,
@@ -100,7 +127,7 @@ button:hover,
     cursor: pointer;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1200px) {
     .TopNav {
         background-color: rgb(16, 60, 16);
         border-bottom: solid 2px white;
@@ -131,7 +158,20 @@ button:hover,
         display: inline-block;
     }
 
+    .TopNav_contentContainer {
+        position: unset;
+        display: flex;
+        flex-direction: row-reverse;
+        border: none;
+        text-align: left;
+        width: 100%;
+        background-color: rgb(16, 60, 16);
+    }
+
     .TopNav ul {
+        display: flex;
+        flex-direction: row;
+        direction: rtl;
         margin: auto 50px auto auto;
     }
 

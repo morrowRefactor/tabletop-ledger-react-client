@@ -10,6 +10,19 @@ class Navbar extends Component {
 
     handleLogoutClick = () => {
         TokenService.clearAuthToken();
+        this.handleMenuToggle();
+    };
+
+    handleMenuToggle = () => {
+      if(window.innerWidth < 1200) {
+          this.context.toggleNav()
+      }
+    };
+
+    homeMenuToggle = () => {
+      if(this.context.navbar === 'show') {
+        this.context.toggleNav();
+      }
     };
 
     // display logout link when user is logged in
@@ -43,6 +56,7 @@ class Navbar extends Component {
             <Link 
               to={idLink}
               className='topNavLink'
+              onClick={() => {this.handleMenuToggle()}}
             >
               My Profile
             </Link>
@@ -62,7 +76,8 @@ class Navbar extends Component {
           <li>
             <Link
               to='/create-account'
-              className='topNavLink'>
+              className='topNavLink'
+              onClick={() => {this.handleMenuToggle()}}>
               Create Account
             </Link>
           </li>
@@ -75,7 +90,8 @@ class Navbar extends Component {
         <li>
           <Link
             to='/login'
-            className='topNavLink'>
+            className='topNavLink'
+            onClick={() => {this.handleMenuToggle()}}>
             Log in
           </Link>
         </li>
@@ -85,12 +101,13 @@ class Navbar extends Component {
     render() {
         return (
             <nav className='TopNav'>
-                <div className='topNavHeader'><Link className='topNavHeaderLink' to='/'>Tabletop Ledger</Link></div>
+                <div className='topNavHeader'><Link className='topNavHeaderLink' to='/' onClick={() => {this.homeMenuToggle()}}>Tabletop Ledger</Link></div>
                 <div className='hamburger'><button className='hamburgerButton' onClick={() => {this.context.toggleNav()}}>&#9776;</button></div>
                 <div className='break'></div>
                 <ul className={this.context.navbar}>
-                    <li><Link className='topNavLink' to='/games'>Games</Link></li>
-                    <li><Link className='topNavLink' to='/leaderboards'>Leaderboards</Link></li>
+                  <section className='TopNav_contentContainer'>
+                    <li><Link className='topNavLink' to='/games' onClick={() => {this.handleMenuToggle()}}>Games</Link></li>
+                    <li><Link className='topNavLink' to='/leaderboards' onClick={() => {this.handleMenuToggle()}}>Leaderboards</Link></li>
                     {TokenService.hasAuthToken()
                         ? this.renderProfileLink()
                         : ''
@@ -103,6 +120,7 @@ class Navbar extends Component {
                         ? this.renderPlaceholder()
                         : this.renderLoginLink()
                     }
+                  </section>
                 </ul>
             </nav>
         );
