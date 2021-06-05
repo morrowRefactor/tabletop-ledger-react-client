@@ -18,6 +18,7 @@ class UserProfile extends Component {
         let userGameMatches = [];
         let usersGames;
         const sessionLink = '/add-session/' + parseInt(this.props.match.params.uid);
+        const pickPlayLink = '/pick-a-play/' + parseInt(this.props.match.params.uid);
 
         // ensure that all required data is present in context
         if(this.context.users.length < 1 || this.context.userGames.length < 1) {
@@ -133,7 +134,8 @@ class UserProfile extends Component {
                             <img className='userProfile_logoImage' alt='Tabletop Ledger Logo' src='https://user-images.githubusercontent.com/58446465/101688934-913da480-3a21-11eb-9e36-6da84e4cea0e.png' />
                         </div>
                         <h1 className='userProfileName'>{user.name}</h1>
-                        <Link className='userProfileSessionLink' to={sessionLink}>Add game session</Link>
+                        <Link className='userProfileSessionLink' to={sessionLink}>Add game session</Link><br/>
+                        <Link className='userProfileSessionLink' to={pickPlayLink}>Pick-a-Play</Link>
                     </section>
                     <section className='UserProfile_stats'>
                         <h3>Stats</h3>

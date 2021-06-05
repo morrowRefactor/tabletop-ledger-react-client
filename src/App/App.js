@@ -11,6 +11,7 @@ import GamePageMain from '../GamePageMain/GamePageMain';
 import GamePage from '../GamePage/GamePage';
 import Leaderboard from '../Leaderboard/Leaderboard';
 import UserProfile from '../UserProfile/UserProfile';
+import PickPlay from '../PickPlay/PickPlay';
 import AddGame from '../AddGame/AddGame';
 import SessionForm from '../SessionForm/SessionForm';
 import SessionPage from '../SessionPage/SessionPage';
@@ -304,6 +305,10 @@ class App extends Component {
           <PrivateRoute
             path='/gamer/:uid'
             component={UserProfile}
+          />
+          <PrivateRoute
+            path='/pick-a-play/:uid'
+            component={PickPlay}
           />
           <PrivateRoute
             path={['/add-games/:uid', '/add-games']}
